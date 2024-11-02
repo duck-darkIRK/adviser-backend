@@ -1,13 +1,16 @@
 import {
+    ArrayMinSize,
+    ArrayNotEmpty,
     IsArray,
     IsBoolean,
     IsDate,
     IsEmail,
+    IsIn,
     IsOptional,
     IsString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Class, Mailbox, Major, Notification, Post } from '../../index';
+import { Class, Major, Notification, Post } from '../../index';
 
 export class UpdateUserDto {
     @IsString()
@@ -20,11 +23,11 @@ export class UpdateUserDto {
 
     @IsString()
     @IsOptional()
-    firstName: string;
+    firstName?: string;
 
     @IsString()
     @IsOptional()
-    lastName: string;
+    lastName?: string;
 
     @IsString()
     @IsOptional()
@@ -32,15 +35,19 @@ export class UpdateUserDto {
 
     @IsDate()
     @IsOptional()
-    birthdate: Date;
+    birthdate?: Date;
 
     @IsEmail()
     @IsOptional()
     email?: string;
 
-    @IsString()
-    @IsOptional()
-    role: 'admin' | 'teacher' | 'student' | 'superAdmin';
+    @IsArray()
+    @ArrayNotEmpty()
+    @ArrayMinSize(1)
+    @IsIn(['admin', 'teacher', 'student', 'superAdmin'], {
+        each: true,
+    })
+    roles: ('admin' | 'teacher' | 'student' | 'superAdmin')[];
 
     @IsString()
     @IsOptional()
@@ -48,11 +55,13 @@ export class UpdateUserDto {
 
     @IsString()
     @IsOptional()
-    password: string;
+    password?: string;
 
     @IsString()
-    refresh_token: string;
+    @IsOptional()
+    refresh_token?: string;
 
+    @IsOptional()
     updatedAt?: Date;
 
     @IsArray()
@@ -64,9 +73,6 @@ export class UpdateUserDto {
     @Type(() => Post)
     @IsOptional()
     readPosts?: Post[];
-
-    @Type(() => Mailbox)
-    mail: Mailbox;
 
     @IsArray()
     @Type(() => Notification)

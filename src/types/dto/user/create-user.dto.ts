@@ -1,8 +1,13 @@
 import {
+    ArrayMinSize,
+    ArrayNotEmpty,
     IsArray,
     IsBoolean,
     IsDate,
     IsEmail,
+    IsIn,
+    IsNotEmpty,
+    IsNumber,
     IsOptional,
     IsString,
 } from 'class-validator';
@@ -12,6 +17,10 @@ import { Class, Mailbox, Major, Notification, Post } from '../../index';
 export class CreateUserDto {
     @IsString()
     idPrefix?: string;
+
+    @IsNotEmpty()
+    @IsNumber()
+    code: number;
 
     @IsBoolean()
     @IsOptional()
@@ -35,8 +44,13 @@ export class CreateUserDto {
     @IsOptional()
     email?: string;
 
-    @IsString()
-    role: 'admin' | 'teacher' | 'student' | 'superAdmin';
+    @IsArray()
+    @ArrayNotEmpty()
+    @ArrayMinSize(1)
+    @IsIn(['admin', 'teacher', 'student', 'superAdmin'], {
+        each: true,
+    })
+    roles: ('admin' | 'teacher' | 'student' | 'superAdmin')[];
 
     @IsString()
     username?: string;
@@ -45,6 +59,7 @@ export class CreateUserDto {
     password: string;
 
     @IsString()
+    @IsOptional()
     refresh_token: string;
 
     createdAt?: Date;

@@ -1,10 +1,10 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
-    ManyToMany,
-    JoinTable,
     CreateDateColumn,
+    Entity,
+    JoinTable,
+    ManyToMany,
+    PrimaryColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { Subject } from './subject.entity';
@@ -12,8 +12,8 @@ import { User } from './user.entity';
 
 @Entity()
 export class Major {
-    @PrimaryGeneratedColumn()
-    Id: number;
+    @PrimaryColumn()
+    Id: string;
     // done
     @ManyToMany(() => User, (user) => user.majors)
     @JoinTable()

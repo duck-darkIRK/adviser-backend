@@ -5,7 +5,7 @@ import {
     JoinTable,
     ManyToMany,
     OneToMany,
-    PrimaryGeneratedColumn,
+    PrimaryColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { Class } from './class.entity';
@@ -16,8 +16,8 @@ import { Major } from './major.entity';
 
 @Entity()
 export class Subject {
-    @PrimaryGeneratedColumn()
-    Id: number;
+    @PrimaryColumn()
+    Id: string;
 
     @Column()
     subjectName: string;

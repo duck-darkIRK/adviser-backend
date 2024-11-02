@@ -7,6 +7,10 @@ export class CreateMajorDto {
     @IsString()
     majorName: string;
 
+    @IsNotEmpty()
+    @IsString()
+    Id: string;
+
     @IsOptional()
     @IsBoolean()
     isDeleted?: boolean;

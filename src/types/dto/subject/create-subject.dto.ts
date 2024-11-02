@@ -7,6 +7,10 @@ export class CreateSubjectDto {
     @IsString()
     subjectName: string;
 
+    @IsNotEmpty()
+    @IsString()
+    Id: string;
+
     @IsOptional()
     @IsBoolean()
     isDeleted?: boolean;

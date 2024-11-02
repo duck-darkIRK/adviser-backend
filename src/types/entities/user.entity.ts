@@ -22,12 +22,12 @@ import { Class } from './class.entity';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    Id: number;
+    @PrimaryGeneratedColumn('uuid')
+    Id: string;
 
+    @Generated('increment')
     @Column({ unique: true })
-    @Generated('uuid')
-    uuid: string;
+    code: number;
 
     @Column({ nullable: true, default: 'img' })
     avatar: string;
@@ -56,8 +56,8 @@ export class User {
     @Column({ unique: true, nullable: true })
     phone: string;
 
-    @Column()
-    role: string;
+    @Column('simple-array', { nullable: true })
+    roles: string[];
     // done
     @ManyToMany(() => Major, (major) => major.users)
     majors: Major[];
@@ -100,7 +100,7 @@ export class User {
     @Column()
     password: string;
 
-    @Column()
+    @Column({ nullable: true })
     refresh_token: string;
 
     @CreateDateColumn()
