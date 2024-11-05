@@ -1,0 +1,168 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Class {
+  Id: ID!
+  classCode: String!
+  createdAt: DateTime!
+  isDeleted: Boolean!
+  size: Int!
+  status: String
+  students: [User!]
+  subject: Subject!
+  teachers: [User!]
+  updatedAt: DateTime!
+}
+
+type Comment {
+  Id: ID!
+  content: String!
+  createdAt: DateTime!
+  likes: [User!]
+  post: Post
+  replies: [Comment!]
+  reply: Comment
+  replyMail: [Mail!]
+  updatedAt: DateTime!
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mail {
+  Id: ID!
+  content: String!
+  createdAt: DateTime!
+  name: String!
+  receiver: User!
+  replyToCmt: Comment
+  replyToMail: Mail
+  replyToPost: Post
+  sender: User!
+  type: String!
+  updatedAt: DateTime!
+}
+
+type Mailbox {
+  Id: ID!
+  createdAt: DateTime!
+  isDeleted: Boolean!
+  mailsCome: [Mail!]
+  mailsTo: [Mail!]
+  updatedAt: DateTime!
+  user: User!
+}
+
+type Major {
+  Id: ID!
+  createdAt: DateTime!
+  isDeleted: Boolean!
+  majorName: String!
+  subjects: [Subject!]!
+  updatedAt: DateTime!
+  users: [User!]!
+}
+
+type Notification {
+  Id: ID!
+  comment: Comment
+  createdAt: DateTime!
+  isDeleted: Boolean!
+  isPin: Boolean!
+  isRead: Boolean!
+  mail: Mail
+  updatedAt: DateTime!
+  user: User!
+}
+
+type Post {
+  Id: ID!
+  comments: [Comment!]!
+  content: String
+  createdAt: DateTime!
+  image: [String]!
+  likes: [User!]!
+  reader: [User!]!
+  reply: [Mail!]!
+  title: String
+  updatedAt: DateTime!
+  user: User!
+}
+
+type Query {
+  queryUserById(id: String!): User
+}
+
+type Subject {
+  Id: ID!
+  classes: [Class!]!
+  createdAt: DateTime!
+  inTranscript: [Transcript!]
+  isDeleted: Boolean!
+  majors: [Major!]!
+  subjectName: String!
+  updatedAt: DateTime!
+}
+
+type Timetable {
+  Id: ID!
+  createdAt: DateTime!
+  isDeleted: Boolean!
+  semester: Float!
+  sheets: [TimetableSheet!]!
+  updatedAt: DateTime!
+  user: User!
+  year: Float!
+}
+
+type TimetableSheet {
+  Id: ID!
+  class: String
+  day: Float!
+  time: Float!
+  timetable: Timetable!
+}
+
+type Transcript {
+  Id: ID!
+  createdAt: DateTime!
+  score: Float!
+  subject: Subject!
+  updatedAt: DateTime!
+  user: User!
+}
+
+type User {
+  Id: ID!
+  avatar: String
+  birthdate: DateTime
+  classes: [Class!]
+  code: Float!
+  comments: [Comment!]
+  createdAt: DateTime!
+  email: String
+  firstName: String!
+  idPrefix: String!
+  isBaned: Boolean!
+  isOnline: Boolean!
+  lastName: String!
+  likedPosts: [Post!]
+  mail: Mailbox
+  majors: [Major!]
+  notifications: [Notification!]
+  password: String!
+  phone: String
+  posts: [Post!]
+  readPosts: [Post!]
+  refresh_token: String
+  roles: [String!]
+  teach: [Class!]
+  timetables: [Timetable!]
+  transcripts: [Transcript!]
+  updatedAt: DateTime!
+  username: String!
+}

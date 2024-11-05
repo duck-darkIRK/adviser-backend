@@ -37,6 +37,20 @@ import { UpdateTranscriptDto } from './dto/transcript/update-transcript.dto';
 import { CreateUserDto } from './dto/user/create-user.dto';
 import { UpdateUserDto } from './dto/user/update-user.dto';
 
+// Import the new models
+import { User as UserQL } from './model/user.model';
+import { Mailbox as MailboxQL } from './model/mailbox.model';
+import { Mail as MailQL } from './model/mail.model';
+import { Notification as NotificationQL } from './model/notification.model';
+import { Post as PostQL } from './model/post.model';
+import { Comment as CommentQL } from './model/comment.model';
+import { Timetable as TimetableQL } from './model/timetable.model';
+import { TimetableSheet as TimetableSheetQL } from './model/timetableSheet.model';
+import { Transcript as TranscriptQL } from './model/transcript.model';
+import { Subject as SubjectQL } from './model/subject.model';
+import { Class as ClassQL } from './model/class.model';
+import { Major as MajorQL } from './model/major.model';
+
 export {
     User,
     Major,
@@ -50,6 +64,18 @@ export {
     Comment,
     Timetable,
     TimetableSheet,
+    UserQL,
+    MajorQL,
+    TranscriptQL,
+    ClassQL,
+    SubjectQL,
+    NotificationQL,
+    MailboxQL,
+    MailQL,
+    PostQL,
+    CommentQL,
+    TimetableQL,
+    TimetableSheetQL,
     CreateClassDto,
     UpdateClassDto,
     CreateCommentDto,

@@ -16,10 +16,10 @@ import {
 } from './types';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/passport/jwt-auth.guard';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RolesGuard } from './auth/roles.guard';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { DateTimeResolver } from 'graphql-scalars';
 
 @Module({
     imports: [
@@ -52,19 +52,17 @@ import { RolesGuard } from './auth/roles.guard';
                 synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
             }),
         }),
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+            driver: ApolloDriver,
+            playground: false,
+            autoSchemaFile: './src/schema.gql',
+            sortSchema: true,
+            resolvers: { DateTime: DateTimeResolver },
+        }),
         UserModule,
         AuthModule,
     ],
     controllers: [],
-    providers: [
-        {
-            provide: APP_GUARD,
-            useClass: JwtAuthGuard,
-        },
-        {
-            provide: APP_GUARD,
-            useClass: RolesGuard,
-        },
-    ],
+    providers: [],
 })
 export class AppModule {}
