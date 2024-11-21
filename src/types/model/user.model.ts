@@ -1,16 +1,16 @@
 // user.model.ts
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Major } from './major.model';
-import { Transcript } from './transcript.model';
-import { Mailbox } from './mailbox.model';
-import { Timetable } from './timetable.model';
-import { Notification } from './notification.model';
-import { Post } from './post.model';
-import { Comment } from './comment.model';
-import { Class } from './class.model';
+import { MajorQL } from './major.model';
+import { TranscriptQL } from './transcript.model';
+import { MailboxQL } from './mailbox.model';
+import { TimetableQL } from './timetable.model';
+import { NotificationQL } from './notification.model';
+import { PostQL } from './post.model';
+import { CommentQL } from './comment.model';
+import { ClassQL } from './class.model';
 
 @ObjectType()
-export class User {
+export class UserQL {
     @Field(() => ID)
     Id: string;
 
@@ -47,38 +47,38 @@ export class User {
     @Field(() => [String], { nullable: true })
     roles: string[];
 
-    @Field(() => [Major], { nullable: true })
-    majors: Major[];
+    @Field(() => [MajorQL], { nullable: true })
+    majors: MajorQL[];
 
-    @Field(() => [Transcript], { nullable: true })
-    transcripts: Transcript[];
+    @Field(() => [TranscriptQL], { nullable: true })
+    transcripts: TranscriptQL[];
 
-    @Field(() => Mailbox, { nullable: true })
-    mail: Mailbox;
+    @Field(() => MailboxQL, { nullable: true })
+    mail: MailboxQL;
 
-    @Field(() => [Timetable], { nullable: true })
-    timetables: Timetable[];
+    @Field(() => [TimetableQL], { nullable: true })
+    timetables: TimetableQL[];
 
-    @Field(() => [Notification], { nullable: true })
-    notifications: Notification[];
+    @Field(() => [NotificationQL], { nullable: true })
+    notifications: NotificationQL[];
 
-    @Field(() => [Post], { nullable: true })
-    posts: Post[];
+    @Field(() => [PostQL], { nullable: true })
+    posts: PostQL[];
 
-    @Field(() => [Post], { nullable: true })
-    readPosts: Post[];
+    @Field(() => [PostQL], { nullable: true })
+    readPosts: PostQL[];
 
-    @Field(() => [Post], { nullable: true })
-    likedPosts: Post[];
+    @Field(() => [PostQL], { nullable: true })
+    likedPosts: PostQL[];
 
-    @Field(() => [Class], { nullable: true })
-    classes: Class[];
+    @Field(() => [ClassQL], { nullable: true })
+    classes: ClassQL[];
 
-    @Field(() => [Class], { nullable: true })
-    teach: Class[];
+    @Field(() => [ClassQL], { nullable: true })
+    teach: ClassQL[];
 
-    @Field(() => [Comment], { nullable: true })
-    comments: Comment[];
+    @Field(() => [CommentQL], { nullable: true })
+    comments: CommentQL[];
 
     @Field()
     username: string;

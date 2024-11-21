@@ -1,6 +1,5 @@
 import {
     Controller,
-    HttpException,
     HttpStatus,
     Post,
     Request,
@@ -13,6 +12,7 @@ import { Public } from '../decorator/guard.config';
 import { UserService } from '../user/user.service';
 import { Roles } from '../decorator/roles.decorator';
 import { Role } from './role.enum';
+import { JwtRefreshGuard } from './passport/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,28 +28,25 @@ export class AuthController {
         return this.authService.login(req.user);
     }
 
-    @Public()
+    @UseGuards(JwtRefreshGuard)
     @Post('refresh')
     async getAccessToken(@Request() req: any) {
-        const isValidRefreshToken = await this.userService.validateRefreshToken(
-            req.body.refresh_token,
-        );
-
-        if (isValidRefreshToken.isValid) {
+        console.log(req);
+        const user = await this.userService.findOneUser(req.user.user.Id);
+        if (user.refresh_token == req.user.token) {
             const tokenResponse = await this.authService.provideAccessToken(
-                isValidRefreshToken.username,
-                isValidRefreshToken.Id,
-                ['admin'],
+                user.username,
+                user.Id,
+                user.roles,
             );
             return {
                 statusCode: HttpStatus.CREATED,
                 data: tokenResponse,
             };
         } else {
-            throw new HttpException(
-                'Refresh token is invalid',
-                HttpStatus.UNAUTHORIZED,
-            );
+            return {
+                statusCode: HttpStatus.CREATED,
+            };
         }
     }
 

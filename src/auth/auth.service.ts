@@ -20,10 +20,17 @@ export class AuthService {
             sub: user.Id,
             roles: user.roles,
         };
-        const newRefreshToken = this.jwtService.sign(payload, {
-            secret: this.configService.get<string>('JWT_SECRET_REFRESH_TOKEN'),
-            expiresIn: this.configService.get<string>('TIME_ALIVE'),
-        });
+        const newRefreshToken = this.jwtService.sign(
+            {
+                sub: user.Id,
+            },
+            {
+                secret: this.configService.get<string>(
+                    'JWT_SECRET_REFRESH_TOKEN',
+                ),
+                expiresIn: this.configService.get<string>('TIME_ALIVE'),
+            },
+        );
 
         return {
             access_token: this.jwtService.sign(payload),

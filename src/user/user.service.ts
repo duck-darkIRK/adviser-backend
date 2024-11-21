@@ -122,38 +122,4 @@ export class UserService {
 
         return refreshToken;
     }
-
-    async validateRefreshToken(refreshToken: string): Promise<{
-        isValid: boolean;
-        username: string | null;
-        Id: string | null;
-        roles: string[] | null;
-    }> {
-        try {
-            const payload = this.jwtService.verify(refreshToken, {
-                secret: this.configService.get<string>(
-                    'JWT_SECRET_REFRESH_TOKEN',
-                ),
-            }); // Verify and decode refresh token
-            const user = await this.userRepository
-                .createQueryBuilder('user')
-                .where('user.id = :id', { id: payload.sub })
-                .getOne();
-
-            if (!user) {
-                throw new NotFoundException(
-                    `User with ID ${payload.sub} not found`,
-                );
-            }
-
-            return {
-                isValid: !!user,
-                username: user.username,
-                Id: user.Id,
-                roles: user.roles,
-            };
-        } catch (err) {
-            return { isValid: false, username: null, Id: null, roles: null };
-        }
-    }
 }

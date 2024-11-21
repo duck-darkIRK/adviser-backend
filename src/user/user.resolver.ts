@@ -2,8 +2,10 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { UserQL } from '../types';
 import { UserService } from './user.service';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 
-// @UseGuards(GqlAuthGuard)
+@UseGuards(GqlAuthGuard)
 @Resolver(() => UserQL)
 export class UserResolver {
     constructor(
@@ -13,6 +15,7 @@ export class UserResolver {
 
     @Query(() => UserQL, { nullable: true })
     async queryUserById(@Args('id') id: string): Promise<UserQL | null> {
+        console.log(await this.userService.findOneUser(id));
         return this.userService.findOneUser(id);
     }
 

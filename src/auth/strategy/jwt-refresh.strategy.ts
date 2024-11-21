@@ -4,9 +4,12 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtRefreshStrategy extends PassportStrategy(
+    Strategy,
+    'jwt-refresh',
+) {
     constructor(configService: ConfigService) {
-        const jwtSecret = configService.get<string>('JWT_SECRET');
+        const jwtSecret = configService.get<string>('JWT_SECRET_REFRESH_TOKEN');
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
@@ -17,8 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     async validate(payload: any) {
         return {
             Id: payload.sub,
-            username: payload.username,
-            roles: payload.roles,
         };
     }
 }

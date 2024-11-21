@@ -6,10 +6,11 @@ import { UserModule } from '../user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../types';
 import { AuthController } from './auth.controller';
-import { LocalStrategy } from './passport/local.strategy';
-import { JwtStrategy } from './passport/jwt.strategy';
+import { LocalStrategy } from './strategy/local.strategy';
+import { JwtStrategy } from './strategy/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { GraphqlJwtStrategy } from './passport/gql-jwt.strategy';
+import { GraphqlJwtStrategy } from './strategy/gql-jwt.strategy';
+import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy';
 
 @Module({
     imports: [
@@ -29,7 +30,13 @@ import { GraphqlJwtStrategy } from './passport/gql-jwt.strategy';
         TypeOrmModule.forFeature([User]),
     ],
     controllers: [AuthController],
-    providers: [AuthService, LocalStrategy, JwtStrategy, GraphqlJwtStrategy],
+    providers: [
+        AuthService,
+        LocalStrategy,
+        JwtStrategy,
+        GraphqlJwtStrategy,
+        JwtRefreshStrategy,
+    ],
     exports: [AuthService],
 })
 export class AuthModule {}

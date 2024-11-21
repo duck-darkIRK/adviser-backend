@@ -19,7 +19,9 @@ import { Notification } from './notification.entity';
 import { Post } from './post.entity';
 import { Comment } from './comment.entity';
 import { Class } from './class.entity';
+import { InputType } from '@nestjs/graphql';
 
+@InputType()
 @Entity()
 export class User {
     @PrimaryGeneratedColumn('uuid')
@@ -47,7 +49,7 @@ export class User {
     @Column()
     lastName: string;
 
-    @Column({ type: 'date', nullable: true })
+    @Column({ type: 'datetime', nullable: true })
     birthdate: Date;
 
     @Column({ unique: true, nullable: true })
