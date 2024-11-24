@@ -6,25 +6,25 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user.entity';
-import { Mail } from './mail.entity';
+import { UserEntity } from './user.entity';
+import { MailEntity } from './mail.entity';
 
 @Entity()
-export class Mailbox {
+export class MailboxEntity {
     @PrimaryGeneratedColumn()
     Id: number;
     // done
-    @OneToOne(() => User, (user) => user.mail)
-    user: User;
+    @OneToOne(() => UserEntity, (user) => user.mail)
+    user: UserEntity;
 
     @Column({ default: false })
     isDeleted: boolean;
 
     @Column('simple-array', { nullable: true })
-    mailsCome: Mail[];
+    mailsCome: MailEntity[];
 
     @Column('simple-array', { nullable: true })
-    mailsTo: Mail[];
+    mailsTo: MailEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

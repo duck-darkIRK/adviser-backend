@@ -10,39 +10,39 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Post } from './post.entity';
-import { User } from './user.entity';
-import { Mail } from './mail.entity';
+import { PostEntity } from './post.entity';
+import { UserEntity } from './user.entity';
+import { MailEntity } from './mail.entity';
 
 @Entity()
-export class Comment {
+export class CommentEntity {
     @PrimaryGeneratedColumn()
     Id: number;
     // done
-    @ManyToOne(() => User, (user) => user.comments)
+    @ManyToOne(() => UserEntity, (user) => user.comments)
     @JoinColumn({ name: 'user' })
-    user: User;
+    user: UserEntity;
 
     @Column({ type: 'text' })
     content: string;
     // done
-    @ManyToOne(() => Post, (post) => post.comments)
+    @ManyToOne(() => PostEntity, (post) => post.comments)
     @JoinColumn({ name: 'comment' })
-    post: Post;
+    post: PostEntity;
     // done
-    @ManyToOne(() => Comment, (comment) => comment.replies)
+    @ManyToOne(() => CommentEntity, (comment) => comment.replies)
     @JoinColumn({ name: 'replyCmt' })
-    reply: Comment;
+    reply: CommentEntity;
     // done ???
-    @OneToMany(() => Comment, (comment) => comment.reply)
-    replies: Comment[];
+    @OneToMany(() => CommentEntity, (comment) => comment.reply)
+    replies: CommentEntity[];
     // done
-    @ManyToMany(() => User, (user) => user.likedPosts)
+    @ManyToMany(() => UserEntity, (user) => user.likedPosts)
     @JoinTable()
-    likes: User[];
+    likes: UserEntity[];
     // done
-    @OneToMany(() => Mail, (mail) => mail.replyToCmt)
-    replyMail: Mail[];
+    @OneToMany(() => MailEntity, (mail) => mail.replyToCmt)
+    replyMail: MailEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

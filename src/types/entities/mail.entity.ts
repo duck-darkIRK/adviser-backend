@@ -8,12 +8,12 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Post } from './post.entity';
-import { Comment } from './comment.entity';
-import { User } from './user.entity';
+import { PostEntity } from './post.entity';
+import { CommentEntity } from './comment.entity';
+import { UserEntity } from './user.entity';
 
 @Entity()
-export class Mail {
+export class MailEntity {
     @PrimaryGeneratedColumn()
     Id: number;
 
@@ -26,25 +26,25 @@ export class Mail {
     @Column({ type: 'text' })
     content: string;
     // done
-    @OneToOne(() => User)
+    @OneToOne(() => UserEntity)
     @JoinColumn({ name: 'sender' })
-    sender: User;
+    sender: UserEntity;
     // done
-    @OneToOne(() => User)
+    @OneToOne(() => UserEntity)
     @JoinColumn({ name: 'receiver' })
-    receiver: User;
+    receiver: UserEntity;
     // done
-    @ManyToOne(() => Mail, (mail) => mail.replyToMail)
+    @ManyToOne(() => MailEntity, (mail) => mail.replyToMail)
     @JoinColumn({ name: 'replyToMail' })
-    replyToMail: Mail;
+    replyToMail: MailEntity;
     // done
-    @ManyToOne(() => Post, (post) => post.reply)
+    @ManyToOne(() => PostEntity, (post) => post.reply)
     @JoinColumn({ name: 'replyToPost' })
-    replyToPost: Post;
+    replyToPost: PostEntity;
     // done
-    @ManyToOne(() => Comment, (comment) => comment.replyMail)
+    @ManyToOne(() => CommentEntity, (comment) => comment.replyMail)
     @JoinColumn({ name: 'replyToCmt' })
-    replyToCmt: Comment;
+    replyToCmt: CommentEntity;
 
     @CreateDateColumn()
     createdAt: Date;

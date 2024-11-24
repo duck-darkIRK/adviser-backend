@@ -10,12 +10,12 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Comment } from './comment.entity';
-import { User } from './user.entity';
-import { Mail } from './mail.entity';
+import { CommentEntity } from './comment.entity';
+import { UserEntity } from './user.entity';
+import { MailEntity } from './mail.entity';
 
 @Entity()
-export class Post {
+export class PostEntity {
     @PrimaryGeneratedColumn()
     Id: number;
 
@@ -28,22 +28,22 @@ export class Post {
     @Column({ nullable: true, type: 'simple-array' })
     image: string[];
     // done
-    @OneToMany(() => Comment, (comment) => comment.post)
-    comments: Comment[];
+    @OneToMany(() => CommentEntity, (comment) => comment.post)
+    comments: CommentEntity[];
     // done
-    @ManyToMany(() => User, (user) => user.likedPosts)
+    @ManyToMany(() => UserEntity, (user) => user.likedPosts)
     @JoinTable()
-    likes: User[];
+    likes: UserEntity[];
     // done
-    @ManyToOne(() => User, (user) => user.posts)
+    @ManyToOne(() => UserEntity, (user) => user.posts)
     @JoinColumn({ name: 'owner' })
-    user: User;
+    user: UserEntity;
     // done
-    @ManyToMany(() => User, (user) => user.readPosts)
-    reader: User[];
+    @ManyToMany(() => UserEntity, (user) => user.readPosts)
+    reader: UserEntity[];
     // done
-    @OneToMany(() => Mail, (mail) => mail.replyToPost)
-    reply: Mail[];
+    @OneToMany(() => MailEntity, (mail) => mail.replyToPost)
+    reply: MailEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

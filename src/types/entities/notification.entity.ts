@@ -7,12 +7,12 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user.entity';
-import { Comment } from './comment.entity';
-import { Mail } from './mail.entity';
+import { UserEntity } from './user.entity';
+import { CommentEntity } from './comment.entity';
+import { MailEntity } from './mail.entity';
 
 @Entity()
-export class Notification {
+export class NotificationEntity {
     @PrimaryGeneratedColumn()
     Id: number;
 
@@ -25,17 +25,17 @@ export class Notification {
     @Column({ default: false })
     isRead: boolean;
     // done
-    @ManyToOne(() => Comment)
+    @ManyToOne(() => CommentEntity)
     @JoinColumn({ name: 'comment' })
-    comment: Comment;
+    comment: CommentEntity;
     // done
-    @ManyToOne(() => Mail)
+    @ManyToOne(() => MailEntity)
     @JoinColumn({ name: 'mail' })
-    mail: Mail;
+    mail: MailEntity;
     // done
-    @ManyToOne(() => User, (user) => user.notifications)
+    @ManyToOne(() => UserEntity, (user) => user.notifications)
     @JoinColumn({ name: 'owner' })
-    user: User;
+    user: UserEntity;
 
     @CreateDateColumn()
     createdAt: Date;

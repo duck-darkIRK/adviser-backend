@@ -5,10 +5,10 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Timetable } from './timetable.entity';
+import { TimetableEntity } from './timetable.entity';
 
 @Entity()
-export class TimetableSheet {
+export class TimetableSheetEntity {
     @PrimaryGeneratedColumn()
     Id: number;
 
@@ -18,9 +18,9 @@ export class TimetableSheet {
     @Column()
     day: number;
     // done
-    @ManyToOne(() => Timetable, (timetable) => timetable.sheets)
+    @ManyToOne(() => TimetableEntity, (timetable) => timetable.sheets)
     @JoinColumn({ name: 'timetable' })
-    timetable: Timetable;
+    timetable: TimetableEntity;
 
     @Column({ nullable: true })
     class: string;

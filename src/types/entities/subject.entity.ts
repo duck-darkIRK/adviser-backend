@@ -8,14 +8,12 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Class } from './class.entity';
-import { Transcript } from './transcript.entity';
-import { Major } from './major.entity';
-
-0;
+import { ClassEntity } from './class.entity';
+import { TranscriptEntity } from './transcript.entity';
+import { MajorEntity } from './major.entity';
 
 @Entity()
-export class Subject {
+export class SubjectEntity {
     @PrimaryColumn()
     Id: string;
 
@@ -25,15 +23,15 @@ export class Subject {
     @Column({ default: false })
     isDeleted: boolean;
     // done
-    @OneToMany(() => Class, (classEntity) => classEntity.subject)
-    classes: Class[];
+    @OneToMany(() => ClassEntity, (classEntity) => classEntity.subject)
+    classes: ClassEntity[];
     // done
-    @ManyToMany(() => Transcript, (transcript) => transcript.subject)
+    @ManyToMany(() => TranscriptEntity, (transcript) => transcript.subject)
     @JoinTable()
-    inTranscript: Transcript[];
+    inTranscript: TranscriptEntity[];
     // done
-    @ManyToMany(() => Major, (major) => major.subjects)
-    majors: Major[];
+    @ManyToMany(() => MajorEntity, (major) => major.subjects)
+    majors: MajorEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

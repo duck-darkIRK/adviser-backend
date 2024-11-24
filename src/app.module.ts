@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
-    Class,
-    Comment,
-    Mail,
-    Mailbox,
-    Major,
-    Notification,
-    Post,
-    Subject,
-    Timetable,
-    TimetableSheet,
-    Transcript,
-    User,
+    ClassEntity,
+    CommentEntity,
+    MailboxEntity,
+    MailEntity,
+    MajorEntity,
+    NotificationEntity,
+    PostEntity,
+    SubjectEntity,
+    TimetableEntity,
+    TimetableSheetEntity,
+    TranscriptEntity,
+    UserEntity,
 } from './types';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -20,6 +20,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DateTimeResolver } from 'graphql-scalars';
+import { MailboxModule } from './mailbox/mailbox.module';
+import { ClassModule } from './class/class.module';
 
 @Module({
     imports: [
@@ -36,18 +38,18 @@ import { DateTimeResolver } from 'graphql-scalars';
                 database: configService.get<string>('DATABASE_NAME'),
                 retryAttempts: 0,
                 entities: [
-                    Major,
-                    Transcript,
-                    Class,
-                    Subject,
-                    Timetable,
-                    Comment,
-                    Mail,
-                    Post,
-                    Mailbox,
-                    Notification,
-                    User,
-                    TimetableSheet,
+                    MajorEntity,
+                    TranscriptEntity,
+                    ClassEntity,
+                    SubjectEntity,
+                    TimetableEntity,
+                    CommentEntity,
+                    MailEntity,
+                    PostEntity,
+                    MailboxEntity,
+                    NotificationEntity,
+                    UserEntity,
+                    TimetableSheetEntity,
                 ],
                 synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
             }),
@@ -58,9 +60,12 @@ import { DateTimeResolver } from 'graphql-scalars';
             autoSchemaFile: './src/schema.gql',
             sortSchema: true,
             resolvers: { DateTime: DateTimeResolver },
+            context: ({ req }) => ({ req }),
         }),
         UserModule,
         AuthModule,
+        MailboxModule,
+        ClassModule,
     ],
     controllers: [],
     providers: [],

@@ -1,27 +1,27 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
     ManyToOne,
     OneToMany,
-    CreateDateColumn,
+    PrimaryGeneratedColumn,
     UpdateDateColumn,
-    JoinColumn,
 } from 'typeorm';
-import { User } from './user.entity';
-import { TimetableSheet } from './timetableSheet.entity';
+import { UserEntity } from './user.entity';
+import { TimetableSheetEntity } from './timetableSheet.entity';
 
 @Entity()
-export class Timetable {
+export class TimetableEntity {
     @PrimaryGeneratedColumn()
     Id: number;
     // done
-    @ManyToOne(() => User, (user) => user.timetables)
+    @ManyToOne(() => UserEntity, (user) => user.timetables)
     @JoinColumn({ name: 'owner' })
-    user: User;
+    user: UserEntity;
     // done
-    @OneToMany(() => TimetableSheet, (sheet) => sheet.timetable)
-    sheets: TimetableSheet[];
+    @OneToMany(() => TimetableSheetEntity, (sheet) => sheet.timetable)
+    sheets: TimetableSheetEntity[];
 
     @Column({ default: false })
     isDeleted: boolean;

@@ -1,15 +1,15 @@
-import { User } from './entities/user.entity';
-import { Major } from './entities/major.entity';
-import { Transcript } from './entities/transcript.entity';
-import { Class } from './entities/class.entity';
-import { Subject } from './entities/subject.entity';
-import { Notification } from './entities/notification.entity';
-import { Mailbox } from './entities/mailbox.entity';
-import { Mail } from './entities/mail.entity';
-import { Post } from './entities/post.entity';
-import { Comment } from './entities/comment.entity';
-import { Timetable } from './entities/timetable.entity';
-import { TimetableSheet } from './entities/timetableSheet.entity';
+import { UserEntity } from './entities/user.entity';
+import { MajorEntity } from './entities/major.entity';
+import { TranscriptEntity } from './entities/transcript.entity';
+import { ClassEntity } from './entities/class.entity';
+import { SubjectEntity } from './entities/subject.entity';
+import { NotificationEntity } from './entities/notification.entity';
+import { MailboxEntity } from './entities/mailbox.entity';
+import { MailEntity } from './entities/mail.entity';
+import { PostEntity } from './entities/post.entity';
+import { CommentEntity } from './entities/comment.entity';
+import { TimetableEntity } from './entities/timetable.entity';
+import { TimetableSheetEntity } from './entities/timetableSheet.entity';
 
 // DTO imports for each module
 import { CreateClassDto } from './dto/class/create-class.dto';
@@ -38,18 +38,18 @@ import { CreateUserDto } from './dto/user/create-user.dto';
 import { UpdateUserDto } from './dto/user/update-user.dto';
 
 // Import the new models
-import { User as UserQL } from './model/user.model';
-import { Mailbox as MailboxQL } from './model/mailbox.model';
-import { Mail as MailQL } from './model/mail.model';
-import { Notification as NotificationQL } from './model/notification.model';
-import { Post as PostQL } from './model/post.model';
-import { Comment as CommentQL } from './model/comment.model';
-import { Timetable as TimetableQL } from './model/timetable.model';
-import { TimetableSheet as TimetableSheetQL } from './model/timetableSheet.model';
-import { Transcript as TranscriptQL } from './model/transcript.model';
-import { Subject as SubjectQL } from './model/subject.model';
-import { Class as ClassQL } from './model/class.model';
-import { Major as MajorQL } from './model/major.model';
+import { User } from './model/user.model';
+import { Mailbox } from './model/mailbox.model';
+import { Mail } from './model/mail.model';
+import { Notification } from './model/notification.model';
+import { Post } from './model/post.model';
+import { Comment } from './model/comment.model';
+import { Timetable } from './model/timetable.model';
+import { TimetableSheet } from './model/timetableSheet.model';
+import { Transcript } from './model/transcript.model';
+import { Subject } from './model/subject.model';
+import { Class } from './model/class.model';
+import { Major } from './model/major.model';
 
 export {
     User,
@@ -64,18 +64,18 @@ export {
     Comment,
     Timetable,
     TimetableSheet,
-    UserQL,
-    MajorQL,
-    TranscriptQL,
-    ClassQL,
-    SubjectQL,
-    NotificationQL,
-    MailboxQL,
-    MailQL,
-    PostQL,
-    CommentQL,
-    TimetableQL,
-    TimetableSheetQL,
+    UserEntity,
+    MajorEntity,
+    TranscriptEntity,
+    ClassEntity,
+    SubjectEntity,
+    NotificationEntity,
+    MailboxEntity,
+    MailEntity,
+    PostEntity,
+    CommentEntity,
+    TimetableEntity,
+    TimetableSheetEntity,
     CreateClassDto,
     UpdateClassDto,
     CreateCommentDto,

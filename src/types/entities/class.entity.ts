@@ -9,11 +9,11 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user.entity';
-import { Subject } from './subject.entity';
+import { UserEntity } from './user.entity';
+import { SubjectEntity } from './subject.entity';
 
 @Entity()
-export class Class {
+export class ClassEntity {
     @PrimaryGeneratedColumn()
     Id: number;
 
@@ -26,17 +26,17 @@ export class Class {
     @Column({ default: 0 })
     size: number;
     // done
-    @ManyToMany(() => User)
+    @ManyToMany(() => UserEntity)
     @JoinTable()
-    students: User[];
+    students: UserEntity[];
     // done
-    @ManyToMany(() => User)
+    @ManyToMany(() => UserEntity)
     @JoinTable()
-    teachers: User[];
+    teachers: UserEntity[];
     // done
-    @ManyToOne(() => Subject, (subject) => subject.classes)
+    @ManyToOne(() => SubjectEntity, (subject) => subject.classes)
     @JoinColumn({ name: 'subject' })
-    subject: Subject;
+    subject: SubjectEntity;
 
     @Column({ nullable: true })
     status: string;

@@ -1,27 +1,27 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
-    ManyToOne,
-    ManyToMany,
-    JoinColumn,
     CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToMany,
+    ManyToOne,
+    PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user.entity';
-import { Subject } from './subject.entity';
+import { UserEntity } from './user.entity';
+import { SubjectEntity } from './subject.entity';
 
 @Entity()
-export class Transcript {
+export class TranscriptEntity {
     @PrimaryGeneratedColumn()
     Id: number;
     // done
-    @ManyToOne(() => User, (user) => user.transcripts)
+    @ManyToOne(() => UserEntity, (user) => user.transcripts)
     @JoinColumn({ name: 'owner' })
-    user: User;
+    user: UserEntity;
     // done
-    @ManyToMany(() => Subject, (subject) => subject.inTranscript)
-    subject: Subject;
+    @ManyToMany(() => SubjectEntity, (subject) => subject.inTranscript)
+    subject: SubjectEntity;
 
     @Column()
     score: number;

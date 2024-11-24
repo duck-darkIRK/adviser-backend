@@ -7,17 +7,17 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Subject } from './subject.entity';
-import { User } from './user.entity';
+import { SubjectEntity } from './subject.entity';
+import { UserEntity } from './user.entity';
 
 @Entity()
-export class Major {
+export class MajorEntity {
     @PrimaryColumn()
     Id: string;
     // done
-    @ManyToMany(() => User, (user) => user.majors)
+    @ManyToMany(() => UserEntity, (user) => user.majors)
     @JoinTable()
-    users: User[];
+    users: UserEntity[];
 
     @Column({ default: false })
     isDeleted: boolean;
@@ -25,9 +25,9 @@ export class Major {
     @Column()
     majorName: string;
     //done
-    @ManyToMany(() => Subject)
+    @ManyToMany(() => SubjectEntity)
     @JoinTable()
-    subjects: Subject[];
+    subjects: SubjectEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

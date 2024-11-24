@@ -11,19 +11,17 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Major } from './major.entity';
-import { Transcript } from './transcript.entity';
-import { Mailbox } from './mailbox.entity';
-import { Timetable } from './timetable.entity';
-import { Notification } from './notification.entity';
-import { Post } from './post.entity';
-import { Comment } from './comment.entity';
-import { Class } from './class.entity';
-import { InputType } from '@nestjs/graphql';
+import { MajorEntity } from './major.entity';
+import { TranscriptEntity } from './transcript.entity';
+import { MailboxEntity } from './mailbox.entity';
+import { TimetableEntity } from './timetable.entity';
+import { NotificationEntity } from './notification.entity';
+import { PostEntity } from './post.entity';
+import { CommentEntity } from './comment.entity';
+import { ClassEntity } from './class.entity';
 
-@InputType()
 @Entity()
-export class User {
+export class UserEntity {
     @PrimaryGeneratedColumn('uuid')
     Id: string;
 
@@ -61,40 +59,40 @@ export class User {
     @Column('simple-array', { nullable: true })
     roles: string[];
     // done
-    @ManyToMany(() => Major, (major) => major.users)
-    majors: Major[];
+    @ManyToMany(() => MajorEntity, (major) => major.users)
+    majors: MajorEntity[];
     // done
-    @OneToMany(() => Transcript, (transcript) => transcript.user)
-    transcripts: Transcript[];
+    @OneToMany(() => TranscriptEntity, (transcript) => transcript.user)
+    transcripts: TranscriptEntity[];
     // done
-    @OneToOne(() => Mailbox, (mailbox) => mailbox.user)
+    @OneToOne(() => MailboxEntity, (mailbox) => mailbox.user)
     @JoinColumn({ name: 'mailbox' })
-    mail: Mailbox;
+    mail: MailboxEntity;
     // done
-    @OneToMany(() => Timetable, (timetable) => timetable.user)
-    timetables: Timetable[];
+    @OneToMany(() => TimetableEntity, (timetable) => timetable.user)
+    timetables: TimetableEntity[];
     // done
-    @OneToMany(() => Notification, (notification) => notification.user)
-    notifications: Notification[];
+    @OneToMany(() => NotificationEntity, (notification) => notification.user)
+    notifications: NotificationEntity[];
     // done
-    @OneToMany(() => Post, (post) => post.user)
-    posts: Post[];
+    @OneToMany(() => PostEntity, (post) => post.user)
+    posts: PostEntity[];
     // done
-    @ManyToMany(() => Post, (post) => post.reader)
+    @ManyToMany(() => PostEntity, (post) => post.reader)
     @JoinTable()
-    readPosts: Post[];
+    readPosts: PostEntity[];
     // done
-    @ManyToMany(() => Post, (post) => post.likes)
-    likedPosts: Post[];
+    @ManyToMany(() => PostEntity, (post) => post.likes)
+    likedPosts: PostEntity[];
     // done
-    @ManyToMany(() => Class, (classEntity) => classEntity.students)
-    classes: Class[];
+    @ManyToMany(() => ClassEntity, (classEntity) => classEntity.students)
+    classes: ClassEntity[];
     // done
-    @ManyToMany(() => Class, (classEntity) => classEntity.teachers)
-    teach: Class[];
+    @ManyToMany(() => ClassEntity, (classEntity) => classEntity.teachers)
+    teach: ClassEntity[];
     // done
-    @OneToMany(() => Comment, (comment) => comment.user)
-    comments: Comment[];
+    @OneToMany(() => CommentEntity, (comment) => comment.user)
+    comments: CommentEntity[];
 
     @Column({ unique: true })
     username: string;

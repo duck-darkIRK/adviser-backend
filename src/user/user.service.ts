@@ -1,7 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto, Mailbox, Major, UpdateUserDto, User } from '../types';
+import {
+    CreateUserDto,
+    MailboxEntity,
+    MajorEntity,
+    UpdateUserDto,
+    User,
+    UserEntity,
+} from '../types';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -9,12 +16,12 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class UserService {
     constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-        @InjectRepository(Mailbox)
-        private readonly mailboxRepository: Repository<Mailbox>,
-        @InjectRepository(Major)
-        private readonly majorRepository: Repository<Major>,
+        @InjectRepository(UserEntity)
+        private readonly userRepository: Repository<UserEntity>,
+        @InjectRepository(MailboxEntity)
+        private readonly mailboxRepository: Repository<MailboxEntity>,
+        @InjectRepository(MajorEntity)
+        private readonly majorRepository: Repository<MajorEntity>,
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
     ) {}
@@ -26,7 +33,7 @@ export class UserService {
         const salt = await bcrypt.genSalt(10);
         newUser.password = await bcrypt.hash(newUser.password, salt);
         // create mailbox
-        const newMailbox = this.mailboxRepository.create(new Mailbox());
+        const newMailbox = this.mailboxRepository.create(new MailboxEntity());
         await this.mailboxRepository.save(newMailbox);
         newUser.mail = newMailbox;
         // create major
