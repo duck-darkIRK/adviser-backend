@@ -1,26 +1,48 @@
 import { Injectable } from '@nestjs/common';
-import { CreateClassDto } from './dto/create-class.dto';
-import { UpdateClassDto } from './dto/update-class.dto';
+import {
+    ClassEntity,
+    CreateClassDto,
+    SubjectEntity,
+    UpdateClassDto,
+    UserEntity,
+} from '../types';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ClassService {
-  create(createClassDto: CreateClassDto) {
-    return 'This action adds a new class';
-  }
+    constructor(
+        @InjectRepository(ClassEntity)
+        private readonly ClassRepository: Repository<ClassEntity>,
+        @InjectRepository(SubjectEntity)
+        private readonly SubjectRepository: Repository<SubjectEntity>,
+        @InjectRepository(UserEntity)
+        private readonly UserRepository: Repository<UserEntity>,
+    ) {}
 
-  findAll() {
-    return `This action returns all class`;
-  }
+    create(createClassDto: CreateClassDto) {
+        return this.ClassRepository.create(createClassDto);
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} class`;
-  }
+    async findAll() {
+        return await this.ClassRepository.createQueryBuilder('class').getMany();
+    }
 
-  update(id: number, updateClassDto: UpdateClassDto) {
-    return `This action updates a #${id} class`;
-  }
+    async findOne(id: number) {
+        return await this.ClassRepository.createQueryBuilder('class')
+            .where('class.id = :id', { id: id })
+            .getOne();
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} class`;
-  }
+    update(id: number, updateClassDto: UpdateClassDto) {
+        return `This action updates a #${id} class`;
+    }
+
+    async remove(id: number) {
+        return await this.ClassRepository.createQueryBuilder()
+            .update()
+            .set({ isDeleted: true })
+            .where('class.id = :id', { id: id })
+            .execute();
+    }
 }
