@@ -10,8 +10,6 @@ import {
     UserEntity,
 } from '../types';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -22,8 +20,6 @@ export class UserService {
         private readonly mailboxRepository: Repository<MailboxEntity>,
         @InjectRepository(MajorEntity)
         private readonly majorRepository: Repository<MajorEntity>,
-        private readonly jwtService: JwtService,
-        private readonly configService: ConfigService,
     ) {}
 
     async createUser(createUserDto: CreateUserDto): Promise<User> {

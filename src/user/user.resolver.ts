@@ -8,10 +8,7 @@ import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 @UseGuards(GqlAuthGuard)
 @Resolver(() => User)
 export class UserResolver {
-    constructor(
-        private readonly userService: UserService,
-        private readonly authService: UserService,
-    ) {}
+    constructor(private readonly userService: UserService) {}
 
     @Query(() => User, { nullable: true })
     async queryUserById(@Args('id') id: string): Promise<User | null> {

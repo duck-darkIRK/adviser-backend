@@ -15,6 +15,6 @@ import { CommentEntity, MailEntity, PostEntity, UserEntity } from '../types';
     ],
     controllers: [PostController],
     providers: [PostService],
-    exports: [TypeOrmModule],
+    exports: [TypeOrmModule, PostService],
 })
 export class PostModule {}

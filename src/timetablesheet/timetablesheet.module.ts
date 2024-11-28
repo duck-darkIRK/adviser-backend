@@ -10,6 +10,6 @@ import { TimetableEntity, TimetableSheetEntity } from '../types';
     ],
     controllers: [TimetableSheetController],
     providers: [TimetableSheetService],
-    exports: [TypeOrmModule],
+    exports: [TypeOrmModule, TimetableSheetService],
 })
 export class TimetableSheetModule {}

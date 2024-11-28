@@ -10,6 +10,6 @@ import { SubjectEntity, TranscriptEntity, UserEntity } from '../types';
     ],
     controllers: [TranscriptController],
     providers: [TranscriptService],
-    exports: [TypeOrmModule],
+    exports: [TypeOrmModule, TranscriptService],
 })
 export class TranscriptModule {}

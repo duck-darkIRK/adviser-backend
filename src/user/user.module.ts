@@ -8,7 +8,7 @@ import { UserResolver } from './user.resolver';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([UserEntity, MailboxEntity, MajorEntity]),
+        TypeOrmModule.forFeature([UserEntity, MajorEntity, MailboxEntity]),
         JwtModule,
     ],
     controllers: [UserController],

@@ -14,6 +14,6 @@ import { TimetableEntity, TimetableSheetEntity, UserEntity } from '../types';
     ],
     controllers: [TimetableController],
     providers: [TimetableService],
-    exports: [TypeOrmModule],
+    exports: [TypeOrmModule, TimetableService],
 })
 export class TimetableModule {}

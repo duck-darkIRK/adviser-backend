@@ -12,6 +12,11 @@ export class MailboxService {
         private readonly mailRepository: Repository<MailEntity>,
     ) {}
 
+    async create() {
+        const newMailbox = this.mailboxRepository.create(new MailboxEntity());
+        return this.mailboxRepository.save(newMailbox);
+    }
+
     async addMailToMailbox(
         mailboxId: number,
         mailId: number,

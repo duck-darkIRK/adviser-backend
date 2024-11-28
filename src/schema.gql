@@ -15,6 +15,19 @@ type Class {
   updatedAt: DateTime!
 }
 
+input ClassInput {
+  Id: Float!
+  classCode: String!
+  createdAt: DateTime!
+  isDeleted: Boolean!
+  size: Int!
+  status: String
+  students: [UserInput!]
+  subject: SubjectInput!
+  teachers: [UserInput!]
+  updatedAt: DateTime!
+}
+
 type Comment {
   Id: ID!
   content: String!
@@ -67,6 +80,19 @@ type Major {
   users: [User!]!
 }
 
+input MajorInput {
+  Id: String!
+  isDeleted: Boolean
+  subjects: [SubjectInput!]
+  users: [UserInput!]
+}
+
+type Mutation {
+  createMajor(createMajorDto: MajorInput!): Major!
+  removeMajor(id: Float!): Boolean!
+  updateMajor(id: Float!, updateMajorDto: MajorInput!): Major!
+}
+
 type Notification {
   Id: ID!
   comment: Comment
@@ -94,6 +120,8 @@ type Post {
 }
 
 type Query {
+  getAllMajors: [Major!]!
+  getMajorById(id: Float!): Major
   queryUserById(id: String!): User
 }
 
@@ -104,6 +132,17 @@ type Subject {
   inTranscript: [Transcript!]
   isDeleted: Boolean!
   majors: [Major!]!
+  subjectName: String!
+  updatedAt: DateTime!
+}
+
+input SubjectInput {
+  Id: String!
+  classes: [ClassInput!]!
+  createdAt: DateTime!
+  inTranscript: [TranscriptInput!]
+  isDeleted: Boolean!
+  majors: [MajorInput!]!
   subjectName: String!
   updatedAt: DateTime!
 }
@@ -136,6 +175,12 @@ type Transcript {
   user: User!
 }
 
+input TranscriptInput {
+  score: Float!
+  subject: SubjectInput!
+  user: UserInput!
+}
+
 type User {
   Id: ID!
   avatar: String
@@ -165,4 +210,26 @@ type User {
   transcripts: [Transcript!]
   updatedAt: DateTime!
   username: String!
+}
+
+input UserInput {
+  Id: String!
+  avatar: String
+  birthdate: DateTime
+  code: Float!
+  createdAt: DateTime!
+  email: String
+  firstName: String!
+  idPrefix: String!
+  isBaned: Boolean!
+  isOnline: Boolean!
+  lastName: String!
+  majors: [String!]
+  password: String
+  phone: String
+  refresh_token: String
+  roles: [String!]
+  transcripts: [String!]
+  updatedAt: DateTime!
+  username: String
 }

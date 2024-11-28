@@ -20,6 +20,6 @@ import {
     ],
     controllers: [NotificationController],
     providers: [NotificationService],
-    exports: [TypeOrmModule],
+    exports: [TypeOrmModule, NotificationService],
 })
 export class NotificationModule {}

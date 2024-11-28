@@ -51,6 +51,20 @@ import { Subject } from './model/subject.model';
 import { Class } from './model/class.model';
 import { Major } from './model/major.model';
 
+// Import the new input graph
+import { UserInput } from './input/user.input';
+import { MailboxInput } from './input/mailbox.input';
+import { MailInput } from './input/mail.input';
+import { NotificationInput } from './input/notification.input';
+import { PostInput } from './input/post.input';
+import { CommentInput } from './input/comment.input';
+import { TimetableInput } from './input/timetable.input';
+import { TimetableSheetInput } from './input/timetableSheet.input';
+import { TranscriptInput } from './input/transcript.input';
+import { SubjectInput } from './input/subject.input';
+import { ClassInput } from './input/class.input';
+import { MajorInput } from './input/major.input';
+
 export {
     User,
     Major,
@@ -100,4 +114,16 @@ export {
     UpdateTranscriptDto,
     CreateUserDto,
     UpdateUserDto,
+    UserInput,
+    MajorInput,
+    TranscriptInput,
+    ClassInput,
+    SubjectInput,
+    NotificationInput,
+    MailboxInput,
+    MailInput,
+    PostInput,
+    CommentInput,
+    TimetableInput,
+    TimetableSheetInput,
 };

@@ -9,6 +9,6 @@ import { ClassEntity, SubjectEntity, UserEntity } from '../types';
     ],
     // controllers: [ClassController],
     providers: [ClassService],
-    exports: [TypeOrmModule],
+    exports: [TypeOrmModule, ClassService],
 })
 export class ClassModule {}
