@@ -17,4 +17,8 @@ export class CreateMajorDto {
     @IsOptional()
     @IsBoolean()
     isDeleted?: boolean;
+
+    @Field(() => [String], { nullable: true })
+    @IsOptional()
+    subjects: string[];
 }

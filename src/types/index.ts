@@ -52,18 +52,66 @@ import { Class } from './model/class.model';
 import { Major } from './model/major.model';
 
 // Import the new input graph
-import { UserInput } from './input/user.input';
-import { MailboxInput } from './input/mailbox.input';
-import { MailInput } from './input/mail.input';
-import { NotificationInput } from './input/notification.input';
-import { PostInput } from './input/post.input';
-import { CommentInput } from './input/comment.input';
-import { TimetableInput } from './input/timetable.input';
-import { TimetableSheetInput } from './input/timetableSheet.input';
-import { TranscriptInput } from './input/transcript.input';
-import { SubjectInput } from './input/subject.input';
-import { ClassInput } from './input/class.input';
-import { MajorInput } from './input/major.input';
+import {
+    CreateUserInput,
+    SearchUserInput,
+    UpdateUserInput,
+} from './input/user.input';
+import {
+    CreateMailboxInput,
+    SearchMailboxInput,
+    UpdateMailboxInput,
+} from './input/mailbox.input';
+import {
+    CreateMailInput,
+    SearchMailInput,
+    UpdateMailInput,
+} from './input/mail.input';
+import {
+    CreateNotificationInput,
+    SearchNotificationInput,
+    UpdateNotificationInput,
+} from './input/notification.input';
+import {
+    CreatePostInput,
+    SearchPostInput,
+    UpdatePostInput,
+} from './input/post.input';
+import {
+    CreateCommentInput,
+    SearchCommentInput,
+    UpdateCommentInput,
+} from './input/comment.input';
+import {
+    CreateTimetableInput,
+    SearchTimetableInput,
+    UpdateTimetableInput,
+} from './input/timetable.input';
+import {
+    CreateTimetableSheetInput,
+    SearchTimetableSheetInput,
+    UpdateTimetableSheetInput,
+} from './input/timetableSheet.input';
+import {
+    CreateTranscriptInput,
+    SearchTranscriptInput,
+    UpdateTranscriptInput,
+} from './input/transcript.input';
+import {
+    CreateSubjectInput,
+    SearchSubjectInput,
+    UpdateSubjectInput,
+} from './input/subject.input';
+import {
+    CreateClassInput,
+    SearchClassInput,
+    UpdateClassInput,
+} from './input/class.input';
+import {
+    CreateMajorInput,
+    SearchMajorInput,
+    UpdateMajorInput,
+} from './input/major.input';
 
 export {
     User,
@@ -114,16 +162,40 @@ export {
     UpdateTranscriptDto,
     CreateUserDto,
     UpdateUserDto,
-    UserInput,
-    MajorInput,
-    TranscriptInput,
-    ClassInput,
-    SubjectInput,
-    NotificationInput,
-    MailboxInput,
-    MailInput,
-    PostInput,
-    CommentInput,
-    TimetableInput,
-    TimetableSheetInput,
+    CreateUserInput,
+    UpdateUserInput,
+    SearchUserInput,
+    CreateMailboxInput,
+    UpdateMailboxInput,
+    SearchMailboxInput,
+    CreateMailInput,
+    UpdateMailInput,
+    SearchMailInput,
+    CreateNotificationInput,
+    UpdateNotificationInput,
+    SearchNotificationInput,
+    CreatePostInput,
+    UpdatePostInput,
+    SearchPostInput,
+    CreateCommentInput,
+    UpdateCommentInput,
+    SearchCommentInput,
+    CreateTimetableInput,
+    UpdateTimetableInput,
+    SearchTimetableInput,
+    CreateTimetableSheetInput,
+    UpdateTimetableSheetInput,
+    SearchTimetableSheetInput,
+    CreateTranscriptInput,
+    UpdateTranscriptInput,
+    SearchTranscriptInput,
+    CreateSubjectInput,
+    UpdateSubjectInput,
+    SearchSubjectInput,
+    CreateClassInput,
+    UpdateClassInput,
+    SearchClassInput,
+    CreateMajorInput,
+    UpdateMajorInput,
+    SearchMajorInput,
 };

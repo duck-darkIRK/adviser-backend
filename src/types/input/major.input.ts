@@ -1,12 +1,29 @@
-// major.input.ts
 import { Field, InputType } from '@nestjs/graphql';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UserInput } from './user.input'; // Giả sử bạn đã có UserInput
-import { SubjectInput } from './subject.input'; // Giả sử bạn đã có SubjectInput
+import { UpdateUserInput } from './user.input';
+import { CreateSubjectInput, UpdateSubjectInput } from './subject.input';
 
 @InputType()
-export class MajorInput {
+export class CreateMajorInput {
+    @Field()
+    @IsNotEmpty()
+    @IsString()
+    majorName: string;
+
+    @Field()
+    @IsNotEmpty()
+    @IsString()
+    Id: string;
+
+    @Field(() => [CreateSubjectInput], { nullable: true })
+    @IsOptional()
+    @Type(() => CreateSubjectInput)
+    subjects?: CreateSubjectInput[];
+}
+
+@InputType()
+export class UpdateMajorInput {
     @Field()
     @IsNotEmpty()
     @IsString()
@@ -17,36 +34,21 @@ export class MajorInput {
     @IsBoolean()
     isDeleted?: boolean;
 
-    @Field(() => [UserInput], { nullable: true })
+    @Field(() => [UpdateUserInput], { nullable: true })
     @IsOptional()
-    @Type(() => UserInput)
-    users?: UserInput[];
+    @Type(() => UpdateUserInput)
+    users?: UpdateUserInput[];
 
-    @Field(() => [SubjectInput], { nullable: true })
+    @Field(() => [UpdateSubjectInput], { nullable: true })
     @IsOptional()
-    @Type(() => SubjectInput)
-    subjects?: SubjectInput[];
+    @Type(() => UpdateSubjectInput)
+    subjects?: UpdateSubjectInput[];
 }
 
-// @InputType()
-// export class UpdateMajorInput {
-//     @Field()
-//     @IsNotEmpty()
-//     @IsString()
-//     Id: string;
-//
-//     @Field({ nullable: true })
-//     @IsOptional()
-//     @IsBoolean()
-//     isDeleted?: boolean;
-//
-//     @Field(() => [UserInput], { nullable: true })
-//     @IsOptional()
-//     @Type(() => UserInput)
-//     users?: UserInput[];
-//
-//     @Field(() => [SubjectInput], { nullable: true })
-//     @IsOptional()
-//     @Type(() => SubjectInput)
-//     subjects?: SubjectInput[];
-// }
+@InputType()
+export class SearchMajorInput {
+    @Field()
+    @IsNotEmpty()
+    @IsString()
+    Id: string; // Assuming Id is a string
+}

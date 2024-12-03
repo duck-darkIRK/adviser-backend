@@ -1,13 +1,12 @@
-// post.input.ts
 import { Field, InputType } from '@nestjs/graphql';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CommentInput } from './comment.input'; // Giả sử bạn đã có CommentInput
-import { UserInput } from './user.input'; // Giả sử bạn đã có UserInput
-import { MailInput } from './mail.input'; // Giả sử bạn đã có MailInput
+import { CreateUserInput, UpdateUserInput } from './user.input';
+import { CreateCommentInput, UpdateCommentInput } from './comment.input';
+import { CreateMailInput, UpdateMailInput } from './mail.input';
 
 @InputType()
-export class PostInput {
+export class CreatePostInput {
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
@@ -23,33 +22,82 @@ export class PostInput {
     @IsArray()
     image?: string[];
 
-    @Field(() => [CommentInput], { nullable: true })
+    @Field(() => [CreateCommentInput], { nullable: true })
     @IsOptional()
-    @Type(() => CommentInput)
-    comments?: CommentInput[];
+    @Type(() => CreateCommentInput)
+    comments?: CreateCommentInput[];
 
-    @Field(() => [UserInput], { nullable: true })
+    @Field(() => [CreateUserInput], { nullable: true })
     @IsOptional()
-    @Type(() => UserInput)
-    likes?: UserInput[];
+    @Type(() => CreateUserInput)
+    likes?: CreateUserInput[];
 
-    @Field(() => UserInput)
-    @Type(() => UserInput)
-    user: UserInput;
+    @Field(() => CreateUserInput)
+    @IsNotEmpty()
+    @Type(() => CreateUserInput)
+    user: CreateUserInput;
 
-    @Field(() => [UserInput], { nullable: true })
+    @Field(() => [CreateUserInput], { nullable: true })
     @IsOptional()
-    @Type(() => UserInput)
-    reader?: UserInput[];
+    @Type(() => CreateUserInput)
+    reader?: CreateUserInput[];
 
-    @Field(() => [MailInput], { nullable: true })
+    @Field(() => [CreateMailInput], { nullable: true })
     @IsOptional()
-    @Type(() => MailInput)
-    reply?: MailInput[];
+    @Type(() => CreateMailInput)
+    reply?: CreateMailInput[];
+}
 
+@InputType()
+export class UpdatePostInput {
     @Field()
-    createdAt: Date;
+    @IsNotEmpty()
+    id: string; // Assuming id is a string, update as needed
 
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    title?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    content?: string;
+
+    @Field(() => [String], { nullable: 'items' })
+    @IsOptional()
+    @IsArray()
+    image?: string[];
+
+    @Field(() => [UpdateCommentInput], { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateCommentInput)
+    comments?: UpdateCommentInput[];
+
+    @Field(() => [UpdateUserInput], { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateUserInput)
+    likes?: UpdateUserInput[];
+
+    @Field(() => UpdateUserInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateUserInput)
+    user?: UpdateUserInput;
+
+    @Field(() => [UpdateUserInput], { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateUserInput)
+    reader?: UpdateUserInput[];
+
+    @Field(() => [UpdateMailInput], { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateMailInput)
+    reply?: UpdateMailInput[];
+}
+
+@InputType()
+export class SearchPostInput {
     @Field()
-    updatedAt: Date;
+    @IsNotEmpty()
+    id: string; // Assuming id is a string, update as needed
 }

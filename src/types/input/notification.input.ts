@@ -1,42 +1,83 @@
-// notification.input.ts
 import { Field, InputType } from '@nestjs/graphql';
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UserInput } from './user.input'; // Giả sử bạn đã có UserInput
-import { CommentInput } from './comment.input'; // Giả sử bạn đã có CommentInput
-import { MailInput } from './mail.input'; // Giả sử bạn đã có MailInput
+import { CreateUserInput, UpdateUserInput } from './user.input';
+import { CreateCommentInput, UpdateCommentInput } from './comment.input';
+import { CreateMailInput, UpdateMailInput } from './mail.input';
 
 @InputType()
-export class NotificationInput {
+export class CreateNotificationInput {
     @Field()
+    @IsNotEmpty()
     @IsBoolean()
     isPin: boolean;
 
     @Field()
+    @IsNotEmpty()
     @IsBoolean()
     isDeleted: boolean;
 
     @Field()
+    @IsNotEmpty()
     @IsBoolean()
     isRead: boolean;
 
-    @Field(() => CommentInput, { nullable: true })
+    @Field(() => CreateCommentInput, { nullable: true })
     @IsOptional()
-    @Type(() => CommentInput)
-    comment?: CommentInput;
+    @Type(() => CreateCommentInput)
+    comment?: CreateCommentInput;
 
-    @Field(() => MailInput, { nullable: true })
+    @Field(() => CreateMailInput, { nullable: true })
     @IsOptional()
-    @Type(() => MailInput)
-    mail?: MailInput;
+    @Type(() => CreateMailInput)
+    mail?: CreateMailInput;
 
-    @Field(() => UserInput)
-    @Type(() => UserInput)
-    user: UserInput;
+    @Field(() => CreateUserInput)
+    @IsNotEmpty()
+    @Type(() => CreateUserInput)
+    user: CreateUserInput;
+}
 
+@InputType()
+export class UpdateNotificationInput {
     @Field()
-    createdAt: Date;
+    @IsNotEmpty()
+    id: string; // Assuming id is a string, update as needed
 
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    isPin?: boolean;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    isDeleted?: boolean;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    isRead?: boolean;
+
+    @Field(() => UpdateCommentInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateCommentInput)
+    comment?: UpdateCommentInput;
+
+    @Field(() => UpdateMailInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateMailInput)
+    mail?: UpdateMailInput;
+
+    @Field(() => UpdateUserInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateUserInput)
+    user?: UpdateUserInput;
+}
+
+@InputType()
+export class SearchNotificationInput {
     @Field()
-    updatedAt: Date;
+    @IsNotEmpty()
+    id: string; // Assuming id is a string, update as needed
 }

@@ -20,7 +20,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DateTimeResolver } from 'graphql-scalars';
-import { MailboxModule } from './mailbox/mailbox.module';
 import { ClassModule } from './class/class.module';
 import { CommentModule } from './comment/comment.module';
 import { MailModule } from './mail/mail.module';
@@ -29,7 +28,6 @@ import { NotificationModule } from './notification/notification.module';
 import { PostModule } from './post/post.module';
 import { SubjectModule } from './subject/subject.module';
 import { TimetableModule } from './timetable/timetable.module';
-import { TimetableSheetModule } from './timetablesheet/timetablesheet.module';
 import { TranscriptModule } from './transcript/transcript.module';
 
 @Module({
@@ -73,7 +71,6 @@ import { TranscriptModule } from './transcript/transcript.module';
         }),
         UserModule,
         AuthModule,
-        MailboxModule,
         ClassModule,
         CommentModule,
         MailModule,
@@ -82,7 +79,6 @@ import { TranscriptModule } from './transcript/transcript.module';
         PostModule,
         SubjectModule,
         TimetableModule,
-        TimetableSheetModule,
         TranscriptModule,
     ],
     controllers: [],

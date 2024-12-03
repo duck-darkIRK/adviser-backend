@@ -1,7 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Subject, User } from '../../index';
 
 @InputType()
 export class UpdateMajorDto {
@@ -15,13 +14,13 @@ export class UpdateMajorDto {
     @IsBoolean()
     isDeleted?: boolean;
 
-    @Field(() => [User], { nullable: true })
+    @Field(() => [String], { nullable: true })
     @IsOptional()
-    @Type(() => User)
-    users?: User[];
+    @Type(() => String)
+    users?: string[];
 
-    @Field(() => [Subject], { nullable: true })
+    @Field(() => [Number], { nullable: true })
     @IsOptional()
-    @Type(() => Subject)
-    subjects?: Subject[];
+    @Type()
+    subjects?: number[];
 }

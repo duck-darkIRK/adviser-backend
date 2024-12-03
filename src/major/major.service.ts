@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
@@ -20,23 +20,46 @@ export class MajorService {
         private readonly subjectRepository: Repository<SubjectEntity>,
     ) {}
 
-    async create(createMajorDto: CreateMajorDto) {
-        const newMajor = this.majorRepository.create(createMajorDto);
+    async create(createMajorDto: CreateMajorDto): Promise<MajorEntity> {
+        const { subjects, ...dto } = createMajorDto;
+        const newMajor = this.majorRepository.create(dto);
+
+        if (subjects && subjects.length > 0) {
+            newMajor.subjects = [];
+
+            const subjectPromises = subjects.map(async (s) => {
+                const subject = await this.subjectRepository.findOne({
+                    where: { Id: s },
+                });
+                if (!subject) {
+                    throw new NotFoundException(
+                        `Not found subject with Id ${s}`,
+                    );
+                }
+                return subject;
+            });
+
+            newMajor.subjects = await Promise.all(subjectPromises);
+        }
+
         return await this.majorRepository.save(newMajor);
     }
 
-    async findAll() {
-        return await this.majorRepository.createQueryBuilder().getMany();
+    async findAll(count?: number, index: number = 0) {
+        return await this.majorRepository.find({
+            skip: index,
+            take: count,
+        });
     }
 
-    async findOne(id: number) {
+    async findOne(id: string) {
         return await this.majorRepository
             .createQueryBuilder('major')
             .where('major.id = :id', { id: id })
             .getOne();
     }
 
-    async update(id: number, updateMajorDto: UpdateMajorDto) {
+    async update(id: string, updateMajorDto: UpdateMajorDto) {
         const { users, subjects, ...dto } = updateMajorDto;
 
         // Cập nhật các trường chính
@@ -49,23 +72,23 @@ export class MajorService {
 
         // Cập nhật quan hệ users
         if (users?.length > 0) {
-            const userIds = users.map((user) => user.Id);
             await this.majorRepository
                 .createQueryBuilder()
                 .relation(MajorEntity, 'users')
                 .of(id)
-                .add(userIds);
+                .add(users);
         }
 
         // Cập nhật quan hệ subjects
         if (subjects?.length > 0) {
-            const subjectIds = subjects.map((subject) => subject.Id);
             await this.majorRepository
                 .createQueryBuilder()
                 .relation(MajorEntity, 'subjects')
                 .of(id)
-                .add(subjectIds);
+                .add(subjects);
         }
+
+        return this.majorRepository.findOne({ where: { Id: id } });
     }
 
     async remove(id: number) {

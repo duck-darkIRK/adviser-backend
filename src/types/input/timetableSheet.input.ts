@@ -1,11 +1,10 @@
-// timetableSheet.input.ts
 import { Field, InputType } from '@nestjs/graphql';
 import { IsInt, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TimetableInput } from './timetable.input'; // Giả sử bạn đã có TimetableInput
+import { CreateTimetableInput, UpdateTimetableInput } from './timetable.input'; // Giả sử bạn đã có CreateTimetableInput và UpdateTimetableInput
 
 @InputType()
-export class TimetableSheetInput {
+export class CreateTimetableSheetInput {
     @Field()
     @IsInt()
     time: number;
@@ -14,12 +13,46 @@ export class TimetableSheetInput {
     @IsInt()
     day: number;
 
-    @Field(() => TimetableInput)
-    @Type(() => TimetableInput)
-    timetable: TimetableInput;
+    @Field(() => CreateTimetableInput)
+    @Type(() => CreateTimetableInput)
+    timetable: CreateTimetableInput;
 
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
     class?: string;
+}
+
+@InputType()
+export class UpdateTimetableSheetInput {
+    @Field()
+    @IsInt()
+    id: number; // Assuming id is an integer, update as needed
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsInt()
+    time?: number;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsInt()
+    day?: number;
+
+    @Field(() => UpdateTimetableInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateTimetableInput)
+    timetable?: UpdateTimetableInput;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    class?: string;
+}
+
+@InputType()
+export class SearchTimetableSheetInput {
+    @Field()
+    @IsInt()
+    id: number; // Assuming id is an integer, update as needed
 }

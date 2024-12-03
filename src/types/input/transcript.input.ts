@@ -1,23 +1,51 @@
-// transcript.input.ts
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UserInput } from './user.input'; // Giả sử bạn đã có UserInput
-import { SubjectInput } from './subject.input'; // Giả sử bạn đã có SubjectInput
+import { CreateUserInput, UpdateUserInput } from './user.input'; // Giả sử bạn đã có CreateUserInput và UpdateUserInput
+import { CreateSubjectInput, UpdateSubjectInput } from './subject.input'; // Giả sử bạn đã có CreateSubjectInput và UpdateSubjectInput
 
 @InputType()
-export class TranscriptInput {
-    @Field(() => UserInput)
-    @Type(() => UserInput)
+export class CreateTranscriptInput {
+    @Field(() => CreateUserInput)
+    @Type(() => CreateUserInput)
     @IsNotEmpty()
-    user: UserInput;
+    user: CreateUserInput;
 
-    @Field(() => SubjectInput)
-    @Type(() => SubjectInput)
+    @Field(() => CreateSubjectInput)
+    @Type(() => CreateSubjectInput)
     @IsNotEmpty()
-    subject: SubjectInput;
+    subject: CreateSubjectInput;
 
     @Field()
     @IsNumber()
     score: number;
+}
+
+@InputType()
+export class UpdateTranscriptInput {
+    @Field()
+    @IsNotEmpty()
+    id: number; // Assuming id is an integer, update as needed
+
+    @Field(() => UpdateUserInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateUserInput)
+    user?: UpdateUserInput;
+
+    @Field(() => UpdateSubjectInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateSubjectInput)
+    subject?: UpdateSubjectInput;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsNumber()
+    score?: number;
+}
+
+@InputType()
+export class SearchTranscriptInput {
+    @Field()
+    @IsNotEmpty()
+    userId: number; // Assuming userId is an integer, update as needed
 }

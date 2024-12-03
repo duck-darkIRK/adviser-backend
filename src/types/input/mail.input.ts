@@ -1,13 +1,12 @@
-// mail.input.ts
 import { Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UserInput } from './user.input';
-import { PostInput } from './post.input';
-import { CommentInput } from './comment.input';
+import { CreateUserInput, UpdateUserInput } from './user.input';
+import { CreatePostInput, UpdatePostInput } from './post.input';
+import { CreateCommentInput, UpdateCommentInput } from './comment.input';
 
 @InputType()
-export class MailInput {
+export class CreateMailInput {
     @Field()
     @IsNotEmpty()
     @IsString()
@@ -23,36 +22,84 @@ export class MailInput {
     @IsString()
     content: string;
 
-    @Field(() => UserInput)
+    @Field(() => CreateUserInput)
     @IsNotEmpty()
-    @Type(() => UserInput)
-    sender: UserInput;
+    @Type(() => CreateUserInput)
+    sender: CreateUserInput;
 
-    @Field(() => UserInput)
+    @Field(() => CreateUserInput)
     @IsNotEmpty()
-    @Type(() => UserInput)
-    receiver: UserInput;
+    @Type(() => CreateUserInput)
+    receiver: CreateUserInput;
 
-    @Field(() => MailInput, { nullable: true })
+    @Field(() => CreateMailInput, { nullable: true })
     @IsOptional()
-    @Type(() => MailInput)
-    replyToMail?: MailInput;
+    @Type(() => CreateMailInput)
+    replyToMail?: CreateMailInput;
 
-    @Field(() => PostInput, { nullable: true })
+    @Field(() => CreatePostInput, { nullable: true })
     @IsOptional()
-    @Type(() => PostInput)
-    replyToPost?: PostInput;
+    @Type(() => CreatePostInput)
+    replyToPost?: CreatePostInput;
 
-    @Field(() => CommentInput, { nullable: true })
+    @Field(() => CreateCommentInput, { nullable: true })
     @IsOptional()
-    @Type(() => CommentInput)
-    replyToCmt?: CommentInput;
+    @Type(() => CreateCommentInput)
+    replyToCmt?: CreateCommentInput;
+}
 
+@InputType()
+export class UpdateMailInput {
     @Field()
     @IsNotEmpty()
-    createdAt: Date;
+    @IsString()
+    id: string; // Assuming id is a string, update as needed
 
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    type?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    name?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    content?: string;
+
+    @Field(() => UpdateUserInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateUserInput)
+    sender?: UpdateUserInput;
+
+    @Field(() => UpdateUserInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateUserInput)
+    receiver?: UpdateUserInput;
+
+    @Field(() => UpdateMailInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateMailInput)
+    replyToMail?: UpdateMailInput;
+
+    @Field(() => UpdatePostInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdatePostInput)
+    replyToPost?: UpdatePostInput;
+
+    @Field(() => UpdateCommentInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateCommentInput)
+    replyToCmt?: UpdateCommentInput;
+}
+
+@InputType()
+export class SearchMailInput {
     @Field()
     @IsNotEmpty()
-    updatedAt: Date;
+    @IsString()
+    id: string; // Assuming id is a string, update as needed
 }

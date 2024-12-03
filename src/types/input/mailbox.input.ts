@@ -1,34 +1,62 @@
-// mailbox.input.ts
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UserInput } from './user.input'; // Giả sử bạn đã có UserInput
-import { MailInput } from './mail.input'; // Giả sử bạn đã có MailInput
+import { CreateUserInput, UpdateUserInput } from './user.input';
+import { CreateMailInput, UpdateMailInput } from './mail.input';
 
 @InputType()
-export class MailboxInput {
+export class CreateMailboxInput {
     @Field()
     @IsNotEmpty()
+    @IsBoolean()
     isDeleted: boolean;
 
-    @Field(() => UserInput)
+    @Field(() => CreateUserInput)
     @IsNotEmpty()
-    @Type(() => UserInput)
-    user: UserInput;
+    @Type(() => CreateUserInput)
+    user: CreateUserInput;
 
-    @Field(() => [MailInput], { nullable: true })
-    @Type(() => MailInput)
-    mailsCome?: MailInput[];
+    @Field(() => [CreateMailInput], { nullable: true })
+    @IsOptional()
+    @Type(() => CreateMailInput)
+    mailsCome?: CreateMailInput[];
 
-    @Field(() => [MailInput], { nullable: true })
-    @Type(() => MailInput)
-    mailsTo?: MailInput[];
+    @Field(() => [CreateMailInput], { nullable: true })
+    @IsOptional()
+    @Type(() => CreateMailInput)
+    mailsTo?: CreateMailInput[];
+}
 
+@InputType()
+export class UpdateMailboxInput {
     @Field()
     @IsNotEmpty()
-    createdAt: Date;
+    id: string; // Assuming id is a string, update as needed
 
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    isDeleted?: boolean;
+
+    @Field(() => UpdateUserInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateUserInput)
+    user?: UpdateUserInput;
+
+    @Field(() => [UpdateMailInput], { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateMailInput)
+    mailsCome?: UpdateMailInput[];
+
+    @Field(() => [UpdateMailInput], { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateMailInput)
+    mailsTo?: UpdateMailInput[];
+}
+
+@InputType()
+export class SearchMailboxInput {
     @Field()
     @IsNotEmpty()
-    updatedAt: Date;
+    id: string; // Assuming id is a string, update as needed
 }

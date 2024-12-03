@@ -1,12 +1,14 @@
-// timetable.input.ts
 import { Field, InputType } from '@nestjs/graphql';
-import { IsBoolean, IsInt } from 'class-validator';
+import { IsBoolean, IsInt, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UserInput } from './user.input'; // Giả sử bạn đã có UserInput
-import { TimetableSheetInput } from './timetableSheet.input'; // Giả sử bạn đã có TimetableSheetInput
+import { CreateUserInput, UpdateUserInput } from './user.input'; // Giả sử bạn đã có CreateUserInput và UpdateUserInput
+import {
+    CreateTimetableSheetInput,
+    UpdateTimetableSheetInput,
+} from './timetableSheet.input'; // Giả sử bạn đã có CreateTimetableSheetInput và UpdateTimetableSheetInput
 
 @InputType()
-export class TimetableInput {
+export class CreateTimetableInput {
     @Field()
     @IsInt()
     semester: number;
@@ -15,13 +17,13 @@ export class TimetableInput {
     @IsInt()
     year: number;
 
-    @Field(() => UserInput)
-    @Type(() => UserInput)
-    user: UserInput;
+    @Field(() => CreateUserInput)
+    @Type(() => CreateUserInput)
+    user: CreateUserInput;
 
-    @Field(() => [TimetableSheetInput])
-    @Type(() => TimetableSheetInput)
-    sheets: TimetableSheetInput[];
+    @Field(() => [CreateTimetableSheetInput])
+    @Type(() => CreateTimetableSheetInput)
+    sheets: CreateTimetableSheetInput[];
 
     @Field()
     @IsBoolean()
@@ -32,4 +34,51 @@ export class TimetableInput {
 
     @Field()
     updatedAt: Date;
+}
+
+@InputType()
+export class UpdateTimetableInput {
+    @Field()
+    @IsInt()
+    id: number; // Assuming id is an integer, update as needed
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsInt()
+    semester?: number;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsInt()
+    year?: number;
+
+    @Field(() => UpdateUserInput, { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateUserInput)
+    user?: UpdateUserInput;
+
+    @Field(() => [UpdateTimetableSheetInput], { nullable: true })
+    @IsOptional()
+    @Type(() => UpdateTimetableSheetInput)
+    sheets?: UpdateTimetableSheetInput[];
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    isDeleted?: boolean;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    createdAt?: Date;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    updatedAt?: Date;
+}
+
+@InputType()
+export class SearchTimetableInput {
+    @Field()
+    @IsInt()
+    id: number; // Assuming id is an integer, update as needed
 }
