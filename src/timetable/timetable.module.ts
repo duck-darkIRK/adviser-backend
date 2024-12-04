@@ -3,6 +3,7 @@ import { TimetableService } from './timetable.service';
 import { TimetableController } from './timetable.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TimetableEntity, TimetableSheetEntity, UserEntity } from '../types';
+import { TimetableResolver } from './timetable.resolver';
 
 @Module({
     imports: [
@@ -13,7 +14,7 @@ import { TimetableEntity, TimetableSheetEntity, UserEntity } from '../types';
         ]),
     ],
     controllers: [TimetableController],
-    providers: [TimetableService],
+    providers: [TimetableService, TimetableResolver],
     exports: [TypeOrmModule, TimetableService],
 })
 export class TimetableModule {}

@@ -20,7 +20,7 @@ export class MajorService {
         private readonly subjectRepository: Repository<SubjectEntity>,
     ) {}
 
-    async create(createMajorDto: CreateMajorDto): Promise<MajorEntity> {
+    async create(createMajorDto: CreateMajorDto) {
         const { subjects, ...dto } = createMajorDto;
         const newMajor = this.majorRepository.create(dto);
 
@@ -53,50 +53,20 @@ export class MajorService {
     }
 
     async findOne(id: string) {
-        return await this.majorRepository
-            .createQueryBuilder('major')
-            .where('major.id = :id', { id: id })
-            .getOne();
+        return await this.majorRepository.findOne({ where: { Id: id } });
     }
 
     async update(id: string, updateMajorDto: UpdateMajorDto) {
-        const { users, subjects, ...dto } = updateMajorDto;
-
-        // Cập nhật các trường chính
-        await this.majorRepository
-            .createQueryBuilder('major')
-            .update()
-            .set(dto)
-            .where('major.id = :id', { id })
-            .execute();
-
-        // Cập nhật quan hệ users
-        if (users?.length > 0) {
-            await this.majorRepository
-                .createQueryBuilder()
-                .relation(MajorEntity, 'users')
-                .of(id)
-                .add(users);
-        }
-
-        // Cập nhật quan hệ subjects
-        if (subjects?.length > 0) {
-            await this.majorRepository
-                .createQueryBuilder()
-                .relation(MajorEntity, 'subjects')
-                .of(id)
-                .add(subjects);
-        }
-
+        await this.majorRepository.update(id, updateMajorDto);
         return this.majorRepository.findOne({ where: { Id: id } });
     }
 
-    async remove(id: number) {
+    async remove(id: string) {
         return await this.majorRepository
-            .createQueryBuilder('major')
+            .createQueryBuilder()
             .update()
             .set({ isDeleted: true })
-            .where('major.id = :id', { id: id })
+            .where('Id = :id', { id })
             .execute();
     }
 }

@@ -72,9 +72,6 @@ export class UpdateUserDto {
     @IsOptional()
     refresh_token?: string;
 
-    @Field({ nullable: true })
-    updatedAt?: Date;
-
     @Field(() => [Major], { nullable: true })
     @IsArray()
     @Type(() => Major)

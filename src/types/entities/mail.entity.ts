@@ -1,3 +1,4 @@
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     CreateDateColumn,
@@ -12,43 +13,55 @@ import { PostEntity } from './post.entity';
 import { CommentEntity } from './comment.entity';
 import { UserEntity } from './user.entity';
 
+@ObjectType()
 @Entity()
 export class MailEntity {
+    @Field(() => Int)
     @PrimaryGeneratedColumn()
     Id: number;
 
+    @Field()
     @Column()
     type: string;
 
+    @Field()
     @Column()
     name: string;
 
+    @Field()
     @Column({ type: 'text' })
     content: string;
-    // done
+
+    @Field(() => UserEntity, { nullable: true })
     @OneToOne(() => UserEntity)
     @JoinColumn({ name: 'sender' })
     sender: UserEntity;
-    // done
+
+    @Field(() => UserEntity, { nullable: true })
     @OneToOne(() => UserEntity)
     @JoinColumn({ name: 'receiver' })
     receiver: UserEntity;
-    // done
+
+    @Field(() => MailEntity, { nullable: true })
     @ManyToOne(() => MailEntity, (mail) => mail.replyToMail)
     @JoinColumn({ name: 'replyToMail' })
     replyToMail: MailEntity;
-    // done
+
+    @Field(() => PostEntity, { nullable: true })
     @ManyToOne(() => PostEntity, (post) => post.reply)
     @JoinColumn({ name: 'replyToPost' })
     replyToPost: PostEntity;
-    // done
+
+    @Field(() => CommentEntity, { nullable: true })
     @ManyToOne(() => CommentEntity, (comment) => comment.replyMail)
     @JoinColumn({ name: 'replyToCmt' })
     replyToCmt: CommentEntity;
 
+    @Field()
     @CreateDateColumn()
     createdAt: Date;
 
+    @Field()
     @UpdateDateColumn()
     updatedAt: Date;
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
     ClassEntity,
@@ -23,25 +23,46 @@ export class SubjectService {
         private readonly TranscriptRepository: Repository<TranscriptEntity>,
     ) {}
 
-    async create(createSubjectDto: CreateSubjectDto) {
-        // const newSubject = this.subjectRepository.create(createSubjectDto);
-        // return this.subjectRepository.save(newSubject);
-        return 'ok';
+    async create(createSubjectDto: CreateSubjectDto): Promise<SubjectEntity> {
+        const { majors, ...dto } = createSubjectDto;
+        const newSubject = this.subjectRepository.create(dto);
+        if (majors && majors.length > 0) {
+            const majorPromise = majors.map(async (m) => {
+                const major = await this.MajorRepository.findOne({
+                    where: { Id: m },
+                });
+                if (!major) {
+                    throw new NotFoundException(`Major with ID ${m} not found`);
+                }
+                return major;
+            });
+
+            newSubject.majors = await Promise.all(majorPromise);
+        }
+
+        return await this.subjectRepository.save(newSubject);
     }
 
-    async findAll() {
-        return await this.subjectRepository.createQueryBuilder().getMany();
+    async findAll(count?: number, index: number = 0) {
+        return await this.subjectRepository.find({
+            take: count,
+            skip: index,
+        });
     }
 
-    async findOne(id: number) {
-        return await this.subjectRepository
-            .createQueryBuilder('subject')
-            .where('subject.id = :id', { id })
-            .getOne();
+    async findOne(id: string) {
+        console.log(
+            await this.subjectRepository.findOne({ where: { Id: id } }),
+        );
+        return await this.subjectRepository.findOne({
+            where: { Id: id },
+            relations: ['majors', 'inTranscript', 'classes'],
+        });
     }
 
-    update(id: number, updateSubjectDto: UpdateSubjectDto) {
-        return `This action updates a #${id} subject`;
+    async update(id: string, updateSubjectDto: UpdateSubjectDto) {
+        await this.subjectRepository.update(id, updateSubjectDto);
+        await this.subjectRepository.findOne({ where: { Id: id } });
     }
 
     async remove(id: number) {

@@ -1,24 +1,18 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TimetableSheet, User } from '../../index';
+import { CreateTimetableSheetDto } from '../../index';
 
 @InputType()
 export class CreateTimetableDto {
-    @Field(() => User)
+    @Field()
     @IsNotEmpty()
-    @Type(() => User)
-    user: User;
+    user: string;
 
-    @Field(() => [TimetableSheet], { nullable: 'itemsAndList' })
+    @Field(() => [CreateTimetableSheetDto], { nullable: 'itemsAndList' })
     @IsOptional()
-    @Type(() => TimetableSheet)
-    sheets?: TimetableSheet[];
-
-    @Field({ nullable: true })
-    @IsOptional()
-    @IsBoolean()
-    isDeleted?: boolean;
+    @Type(() => CreateTimetableSheetDto)
+    sheets?: CreateTimetableSheetDto[];
 
     @Field()
     @IsNotEmpty()

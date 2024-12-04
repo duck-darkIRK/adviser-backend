@@ -1,3 +1,4 @@
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     CreateDateColumn,
@@ -11,30 +12,39 @@ import {
 import { UserEntity } from './user.entity';
 import { TimetableSheetEntity } from './timetableSheet.entity';
 
+@ObjectType()
 @Entity()
 export class TimetableEntity {
+    @Field()
     @PrimaryGeneratedColumn()
     Id: number;
-    // done
+
+    @Field(() => UserEntity)
     @ManyToOne(() => UserEntity, (user) => user.timetables)
     @JoinColumn({ name: 'owner' })
     user: UserEntity;
-    // done
+
+    @Field(() => [TimetableSheetEntity])
     @OneToMany(() => TimetableSheetEntity, (sheet) => sheet.timetable)
     sheets: TimetableSheetEntity[];
 
+    @Field()
     @Column({ default: false })
     isDeleted: boolean;
 
+    @Field(() => Int)
     @Column()
     semester: number;
 
+    @Field(() => Int)
     @Column()
     year: number;
 
+    @Field(() => Date)
     @CreateDateColumn()
     createdAt: Date;
 
+    @Field(() => Date)
     @UpdateDateColumn()
     updatedAt: Date;
 }

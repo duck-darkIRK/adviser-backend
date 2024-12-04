@@ -23,22 +23,27 @@ export class PostService {
         private readonly commentRepository: Repository<CommentEntity>,
     ) {}
 
-    create(createPostDto: CreatePostDto) {
-        return 'This action adds a new post';
+    async create(createPostDto: CreatePostDto) {
+        const newPost = this.postRepository.create(createPostDto);
+        return await this.postRepository.save(newPost);
     }
 
-    async findAll() {
-        return await this.postRepository.createQueryBuilder().getMany();
+    async findAll(count?: number, index: number = 0) {
+        return await this.postRepository.find({
+            take: count,
+            skip: index,
+        });
     }
 
     async findOne(id: number) {
-        return await this.postRepository
-            .createQueryBuilder('post')
-            .where('post.id = :id', { id: id })
-            .getOne();
+        return await this.postRepository.findOne({
+            where: { Id: id },
+            relations: ['comments', 'likes', 'user', 'reader', 'reply'],
+        });
     }
 
-    update(id: number, updatePostDto: UpdatePostDto) {
-        return `This action updates a #${id} post`;
+    async update(id: number, updatePostDto: UpdatePostDto) {
+        await this.postRepository.update(id, updatePostDto);
+        return await this.postRepository.findOne({ where: { Id: id } });
     }
 }

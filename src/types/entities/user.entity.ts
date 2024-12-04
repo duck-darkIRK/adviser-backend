@@ -1,3 +1,4 @@
+import { Field, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     CreateDateColumn,
@@ -20,92 +21,121 @@ import { PostEntity } from './post.entity';
 import { CommentEntity } from './comment.entity';
 import { ClassEntity } from './class.entity';
 
+@ObjectType()
 @Entity()
 export class UserEntity {
+    @Field()
     @PrimaryGeneratedColumn('uuid')
     Id: string;
 
+    @Field()
     @Generated('increment')
     @Column({ unique: true })
     code: number;
 
+    @Field({ nullable: true, defaultValue: 'img' })
     @Column({ nullable: true, default: 'img' })
     avatar: string;
 
+    @Field({ defaultValue: 'A' })
     @Column({ default: 'A' })
     idPrefix: string;
 
+    @Field({ defaultValue: false })
     @Column({ default: false })
     isOnline: boolean;
 
+    @Field({ defaultValue: false })
     @Column({ default: false })
     isBaned: boolean;
 
+    @Field()
     @Column()
     firstName: string;
 
+    @Field()
     @Column()
     lastName: string;
 
+    @Field({ nullable: true })
     @Column({ type: 'datetime', nullable: true })
     birthdate: Date;
 
+    @Field({ nullable: true })
     @Column({ unique: true, nullable: true })
     email: string;
 
+    @Field({ nullable: true })
     @Column({ unique: true, nullable: true })
     phone: string;
 
+    @Field(() => [String], { nullable: true })
     @Column('simple-array', { nullable: true })
     roles: string[];
-    // done
+
+    @Field(() => [MajorEntity])
     @ManyToMany(() => MajorEntity, (major) => major.users)
     majors: MajorEntity[];
-    // done
+
+    @Field(() => [TranscriptEntity])
     @OneToMany(() => TranscriptEntity, (transcript) => transcript.user)
     transcripts: TranscriptEntity[];
-    // done
+
+    @Field(() => MailboxEntity)
     @OneToOne(() => MailboxEntity, (mailbox) => mailbox.user)
     @JoinColumn({ name: 'mailbox' })
     mail: MailboxEntity;
-    // done
+
+    @Field(() => [TimetableEntity])
     @OneToMany(() => TimetableEntity, (timetable) => timetable.user)
     timetables: TimetableEntity[];
-    // done
+
+    @Field(() => [NotificationEntity])
     @OneToMany(() => NotificationEntity, (notification) => notification.user)
     notifications: NotificationEntity[];
-    // done
+
+    @Field(() => [PostEntity])
     @OneToMany(() => PostEntity, (post) => post.user)
     posts: PostEntity[];
-    // done
+
+    @Field(() => [PostEntity])
     @ManyToMany(() => PostEntity, (post) => post.reader)
     @JoinTable()
     readPosts: PostEntity[];
-    // done
+
+    @Field(() => [PostEntity])
     @ManyToMany(() => PostEntity, (post) => post.likes)
     likedPosts: PostEntity[];
-    // done
+
+    @Field(() => [ClassEntity])
     @ManyToMany(() => ClassEntity, (classEntity) => classEntity.students)
     classes: ClassEntity[];
-    // done
+
+    @Field(() => [ClassEntity])
     @ManyToMany(() => ClassEntity, (classEntity) => classEntity.teachers)
     teach: ClassEntity[];
-    // done
+
+    @Field(() => [CommentEntity])
     @OneToMany(() => CommentEntity, (comment) => comment.user)
     comments: CommentEntity[];
 
+    @Field()
     @Column({ unique: true })
     username: string;
 
+    @Field()
     @Column()
     password: string;
 
+    @Field({ nullable: true })
     @Column({ nullable: true })
     refresh_token: string;
 
+    @Field()
     @CreateDateColumn()
     createdAt: Date;
 
+    @Field()
     @UpdateDateColumn()
     updatedAt: Date;
 }

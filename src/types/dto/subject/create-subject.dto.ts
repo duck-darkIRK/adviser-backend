@@ -1,7 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Major } from '../../index';
 
 @InputType()
 export class CreateSubjectDto {
@@ -20,8 +19,8 @@ export class CreateSubjectDto {
     @IsBoolean()
     isDeleted?: boolean;
 
-    @Field(() => [Major], { nullable: 'itemsAndList' })
+    @Field(() => [String], { nullable: 'itemsAndList' })
     @IsOptional()
-    @Type(() => Major)
-    majors?: Major[];
+    @Type(() => String)
+    majors?: string[];
 }

@@ -1,7 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Comment, Mail, User } from '../../index';
+import { User } from '../../index';
 
 @InputType()
 export class CreatePostDto {
@@ -24,25 +24,4 @@ export class CreatePostDto {
     @IsNotEmpty()
     @Type(() => User)
     user: User;
-
-    @Field(() => [User], { nullable: 'itemsAndList' })
-    @IsOptional()
-    @IsArray()
-    @Type(() => User)
-    reader?: User[];
-
-    @Field(() => [Comment], { nullable: 'itemsAndList' })
-    @IsOptional()
-    @Type(() => Comment)
-    comments?: Comment[];
-
-    @Field(() => [User], { nullable: 'itemsAndList' })
-    @IsOptional()
-    @Type(() => User)
-    likes?: User[];
-
-    @Field(() => [Mail], { nullable: 'itemsAndList' })
-    @IsOptional()
-    @Type(() => Mail)
-    reply?: Mail[];
 }

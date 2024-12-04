@@ -1,7 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Comment, Mail, Post, User } from '../../index';
 
 @InputType()
 export class CreateMailDto {
@@ -10,38 +9,36 @@ export class CreateMailDto {
     @IsString()
     type: 'default' | 'student' | 'all';
 
-    @Field({ nullable: true })
-    @IsOptional()
+    @Field()
+    @IsNotEmpty()
     @IsString()
     name: string;
 
-    @Field({ nullable: true })
-    @IsOptional()
+    @Field()
+    @IsNotEmpty()
     @IsString()
     content: string;
 
-    @Field(() => User)
+    @Field()
     @IsNotEmpty()
-    @Type(() => User)
-    sender: User;
+    sender: string;
 
-    @Field(() => User, { nullable: true })
-    @IsOptional()
-    @Type(() => User)
-    receiver: User;
+    @Field()
+    @IsNotEmpty()
+    receiver: string;
 
-    @Field(() => Mail, { nullable: true })
+    @Field({ nullable: true })
     @IsOptional()
-    @Type(() => Mail)
-    replyToMail?: Mail;
+    @Type(() => Number)
+    replyToMail?: number;
 
-    @Field(() => Post, { nullable: true })
+    @Field({ nullable: true })
     @IsOptional()
-    @Type(() => Post)
-    replyToPost?: Post;
+    @Type(() => Number)
+    replyToPost?: number;
 
-    @Field(() => Comment, { nullable: true })
+    @Field({ nullable: true })
     @IsOptional()
-    @Type(() => Comment)
-    replyToCmt?: Comment;
+    @Type(() => Number)
+    replyToCmt?: number;
 }

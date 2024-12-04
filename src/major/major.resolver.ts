@@ -7,7 +7,6 @@ import {
     UpdateMajorDto,
     UserEntity,
 } from '../types';
-import { ParseIntPipe } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -32,9 +31,7 @@ export class MajorResolver {
     }
 
     @Query(() => Major, { nullable: true })
-    async getMajorById(
-        @Args('id', { type: () => Number }, ParseIntPipe) id: string,
-    ) {
+    async getMajorById(@Args('id', { type: () => String }) id: string) {
         return this.majorService.findOne(id);
     }
 
@@ -46,15 +43,13 @@ export class MajorResolver {
     @Mutation(() => Major) // Trả về Major ObjectType
     async updateMajor(
         @Args('updateMajorDto') updateMajorDto: UpdateMajorDto,
-        @Args('id', { type: () => Number }, ParseIntPipe) id: string,
+        @Args('id', { type: () => String }) id: string,
     ) {
         return this.majorService.update(id, updateMajorDto);
     }
 
     @Mutation(() => Boolean)
-    async removeMajor(
-        @Args('id', { type: () => Number }, ParseIntPipe) id: number,
-    ) {
+    async removeMajor(@Args('id', { type: () => String }) id: string) {
         await this.majorService.remove(id);
         return true;
     }

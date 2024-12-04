@@ -1,7 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Timetable } from '../../index';
 
 @InputType()
 export class CreateTimetableSheetDto {
@@ -14,11 +12,6 @@ export class CreateTimetableSheetDto {
     @IsNotEmpty()
     @IsInt()
     day: number;
-
-    @Field(() => [Timetable], { nullable: 'itemsAndList' })
-    @IsNotEmpty()
-    @Type(() => Timetable)
-    timetable: Timetable;
 
     @Field()
     @IsNotEmpty()

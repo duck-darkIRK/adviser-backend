@@ -7,16 +7,15 @@ import {
     IsString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Subject, User } from '../../index';
 
-@InputType() // Định nghĩa là GraphQL InputType
+@InputType()
 export class CreateClassDto {
-    @Field() // GraphQL Field
-    @IsNotEmpty() // REST validation
+    @Field()
+    @IsNotEmpty()
     @IsString()
     classCode: string;
 
-    @Field({ nullable: true }) // nullable = true cho trường tùy chọn
+    @Field({ nullable: true })
     @IsOptional()
     @IsBoolean()
     isDeleted?: boolean;
@@ -26,22 +25,22 @@ export class CreateClassDto {
     @IsInt()
     size: number;
 
-    @Field(() => [User], { nullable: true }) // Mảng User
+    @Field(() => [String], { nullable: true })
     @IsOptional()
-    @Type(() => User)
-    students?: User[];
+    @Type(() => String)
+    students?: string[];
 
-    @Field(() => [User], { nullable: true }) // Mảng User
+    @Field(() => [String], { nullable: true })
     @IsOptional()
-    @Type(() => User)
-    teachers?: User[];
+    @Type(() => String)
+    teachers?: string[];
 
-    @Field(() => Subject) // Subject bắt buộc
+    @Field()
     @IsNotEmpty()
-    @Type(() => Subject)
-    subject: Subject;
+    @Type(() => String)
+    subject: string;
 
-    @Field({ nullable: true }) // Trường trạng thái tùy chọn
+    @Field({ nullable: true })
     @IsOptional()
     @IsString()
     status?: string;

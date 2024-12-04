@@ -54,36 +54,17 @@ export class UserService {
     }
 
     async findOneUser(id: string): Promise<User> {
-        const user = await this.userRepository
-            .createQueryBuilder('user')
-            .leftJoinAndSelect('user.mail', 'mail')
-            .where('user.id = :id', { id })
-            .getOne();
-
-        if (!user) {
-            throw new NotFoundException(`User with ID ${id} not found`);
-        }
-        return user;
+        return await this.userRepository.findOne({ where: { Id: id } });
     }
 
     async findOneUserByUsername(username: string): Promise<User> {
-        const user = await this.userRepository
-            .createQueryBuilder('user')
-            .where('user.username = :username', { username })
-            .getOne();
-
-        if (!user) {
-            throw new NotFoundException(`User with ID ${username} not found`);
-        }
-
-        return user;
+        return await this.userRepository.findOne({
+            where: { username: username },
+        });
     }
 
     async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-        const user = await this.userRepository
-            .createQueryBuilder('user')
-            .where('user.id = :id', { id })
-            .getOne();
+        const user = await this.userRepository.findOne({ where: { Id: id } });
 
         if (!user) {
             throw new NotFoundException(`User with ID ${id} not found`);

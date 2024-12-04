@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
     CreateTimetableDto,
@@ -13,35 +13,61 @@ import { Repository } from 'typeorm';
 export class TimetableService {
     constructor(
         @InjectRepository(TimetableEntity)
-        private readonly timetableRepository: Repository<TimetableEntity>,
+        private readonly TimetableRepository: Repository<TimetableEntity>,
         @InjectRepository(UserEntity)
-        private readonly userRepository: Repository<UserEntity>,
+        private readonly UserRepository: Repository<UserEntity>,
         @InjectRepository(TimetableSheetEntity)
-        private readonly postRepository: Repository<TimetableSheetEntity>,
+        private readonly TimetableSheetRepository: Repository<TimetableSheetEntity>,
     ) {}
 
-    create(createTimetableDto: CreateTimetableDto) {
-        return 'This action adds a new timetable';
+    async create(createTimetableDto: CreateTimetableDto) {
+        const { sheets, user, ...dto } = createTimetableDto;
+        const newTimetable = this.TimetableRepository.create(dto);
+        if (user) {
+            const userEntity = await this.UserRepository.findOne({
+                where: { Id: user },
+            });
+            if (userEntity) {
+                newTimetable.user = userEntity;
+            } else {
+                throw new NotFoundException(`User with Id: ${user} not found.`);
+            }
+        }
+        const timeList = sheets.map((sheet) => sheet.time);
+        if (timeList.length > 0 && new Set(timeList).size == timeList.length) {
+            const sheetPromise = sheets.map(async (sheet) => {
+                const newTimetableSheet =
+                    this.TimetableSheetRepository.create(sheet);
+                return await this.TimetableSheetRepository.save(
+                    newTimetableSheet,
+                );
+            });
+            newTimetable.sheets = await Promise.all(sheetPromise);
+        }
+        return await this.TimetableRepository.save(newTimetable);
     }
 
-    async findAll() {
-        return await this.timetableRepository.createQueryBuilder().getMany();
+    async findAll(count?: number, index: number = 0) {
+        return await this.TimetableRepository.find({
+            take: count,
+            skip: index,
+        });
     }
 
     async findOne(id: number) {
-        return await this.timetableRepository
-            .createQueryBuilder('timetable')
-            .where('timetable.id = :id', { id: id })
-            .getOne();
+        return await this.TimetableRepository.findOne({
+            where: { Id: id },
+            relations: ['user', 'sheets'],
+        });
     }
 
-    update(id: number, updateTimetableDto: UpdateTimetableDto) {
-        return `This action updates a #${id} timetable`;
+    async update(id: number, updateTimetableDto: UpdateTimetableDto) {
+        await this.TimetableRepository.update(id, updateTimetableDto);
+        return await this.TimetableRepository.findOne({ where: { Id: id } });
     }
 
     async remove(id: number) {
-        return await this.timetableRepository
-            .createQueryBuilder('timetable')
+        return await this.TimetableRepository.createQueryBuilder('timetable')
             .update()
             .set({ isDeleted: true })
             .where('timetable.id = :id', { id })

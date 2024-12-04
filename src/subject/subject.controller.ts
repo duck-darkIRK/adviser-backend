@@ -26,7 +26,7 @@ export class SubjectController {
 
     @Get(':id')
     findOne(@Param('id') id: string) {
-        return this.subjectService.findOne(+id);
+        return this.subjectService.findOne(id);
     }
 
     @Patch(':id')
@@ -34,7 +34,7 @@ export class SubjectController {
         @Param('id') id: string,
         @Body() updateSubjectDto: UpdateSubjectDto,
     ) {
-        return this.subjectService.update(+id, updateSubjectDto);
+        return this.subjectService.update(id, updateSubjectDto);
     }
 
     @Delete(':id')

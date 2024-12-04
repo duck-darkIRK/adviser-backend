@@ -1,7 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Comment, Mail, Post, User } from '../../index';
 
 @InputType()
 export class CreateCommentDto {
@@ -10,33 +8,15 @@ export class CreateCommentDto {
     @IsString()
     content: string;
 
-    @Field(() => User)
+    @Field()
     @IsNotEmpty()
-    @Type(() => User)
-    user: User;
+    user: string;
 
-    @Field(() => Post, { nullable: true })
+    @Field({ nullable: true })
     @IsOptional()
-    @Type(() => Post)
-    post?: Post;
+    post?: number;
 
-    @Field(() => Comment, { nullable: true })
+    @Field({ nullable: true })
     @IsOptional()
-    @Type(() => Comment)
-    reply?: Comment;
-
-    @Field(() => [Comment], { nullable: true })
-    @IsOptional()
-    @Type(() => Comment)
-    replies?: Comment[];
-
-    @Field(() => [User], { nullable: true })
-    @IsOptional()
-    @Type(() => User)
-    likes?: User[];
-
-    @Field(() => [Mail], { nullable: true })
-    @IsOptional()
-    @Type(() => Mail)
-    replyMail?: Mail[];
+    reply?: number;
 }

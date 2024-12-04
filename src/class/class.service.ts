@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
     ClassEntity,
     CreateClassDto,
@@ -20,22 +20,71 @@ export class ClassService {
         private readonly UserRepository: Repository<UserEntity>,
     ) {}
 
-    create(createClassDto: CreateClassDto) {
-        return this.ClassRepository.create(createClassDto);
+    async create(createClassDto: CreateClassDto) {
+        const { students, teachers, subject, ...dto } = createClassDto;
+        const newClass = this.ClassRepository.create(dto);
+        if (students && students.length > 0) {
+            const studentPromise = students.map(async (studentId) => {
+                const student = await this.UserRepository.findOne({
+                    where: { Id: studentId },
+                });
+                if (student) {
+                    return student;
+                } else {
+                    throw new NotFoundException(
+                        `Student with ID ${student} not found`,
+                    );
+                }
+            });
+            newClass.students = await Promise.all(studentPromise);
+        }
+        if (teachers && teachers.length > 0) {
+            const teacherPromise = teachers.map(async (teacherId) => {
+                const teacher = await this.UserRepository.findOne({
+                    where: { Id: teacherId },
+                });
+                if (teacher) {
+                    return teacher;
+                } else {
+                    throw new NotFoundException(
+                        `Teacher with ID ${teacher} not found`,
+                    );
+                }
+            });
+            newClass.teachers = await Promise.all(teacherPromise);
+        }
+        if (subject) {
+            const subjectEntity = await this.SubjectRepository.findOne({
+                where: { Id: subject },
+            });
+            if (subjectEntity) {
+                newClass.subject = subjectEntity;
+            } else {
+                throw new NotFoundException(
+                    `Subject with ID ${subject} not found`,
+                );
+            }
+        }
+        return this.ClassRepository.save(newClass);
     }
 
-    async findAll() {
-        return await this.ClassRepository.createQueryBuilder('class').getMany();
+    async findAll(count?: number, index: number = 0) {
+        return await this.ClassRepository.find({
+            take: count,
+            skip: index,
+        });
     }
 
     async findOne(id: number) {
-        return await this.ClassRepository.createQueryBuilder('class')
-            .where('class.id = :id', { id: id })
-            .getOne();
+        return await this.ClassRepository.findOne({
+            where: { Id: id },
+            relations: ['subjects', 'teachers', 'student'],
+        });
     }
 
-    update(id: number, updateClassDto: UpdateClassDto) {
-        return `This action updates a #${id} class`;
+    async update(id: number, updateClassDto: UpdateClassDto) {
+        await this.ClassRepository.update(id, updateClassDto);
+        return await this.ClassRepository.findOne({ where: { Id: id } });
     }
 
     async remove(id: number) {

@@ -1,7 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Subject, User } from '../../index';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 @InputType()
 export class CreateTranscriptDto {
@@ -10,13 +8,11 @@ export class CreateTranscriptDto {
     @IsNumber()
     score: number;
 
-    @Field(() => User)
+    @Field()
     @IsNotEmpty()
-    @Type(() => User)
-    user: User;
+    user: string;
 
-    @Field(() => Subject, { nullable: true })
-    @IsOptional()
-    @Type(() => Subject)
-    subject?: Subject;
+    @Field()
+    @IsNotEmpty()
+    subject: string;
 }

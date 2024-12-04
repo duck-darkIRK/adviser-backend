@@ -3,6 +3,7 @@ import { CommentService } from './comment.service';
 import { CommentController } from './comment.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentEntity, MailEntity, PostEntity, UserEntity } from '../types';
+import { CommentResolver } from './comment.resolver';
 
 @Module({
     imports: [
@@ -15,7 +16,7 @@ import { CommentEntity, MailEntity, PostEntity, UserEntity } from '../types';
         ]),
     ],
     controllers: [CommentController],
-    providers: [CommentService],
+    providers: [CommentService, CommentResolver],
     exports: [TypeOrmModule, CommentService],
 })
 export class CommentModule {}
