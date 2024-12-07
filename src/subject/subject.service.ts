@@ -14,7 +14,7 @@ import { Repository } from 'typeorm';
 export class SubjectService {
     constructor(
         @InjectRepository(SubjectEntity)
-        private readonly subjectRepository: Repository<SubjectEntity>,
+        private readonly SubjectRepository: Repository<SubjectEntity>,
         @InjectRepository(ClassEntity)
         private readonly UserRepository: Repository<ClassEntity>,
         @InjectRepository(MajorEntity)
@@ -25,7 +25,7 @@ export class SubjectService {
 
     async create(createSubjectDto: CreateSubjectDto): Promise<SubjectEntity> {
         const { majors, ...dto } = createSubjectDto;
-        const newSubject = this.subjectRepository.create(dto);
+        const newSubject = this.SubjectRepository.create(dto);
         if (majors && majors.length > 0) {
             const majorPromise = majors.map(async (m) => {
                 const major = await this.MajorRepository.findOne({
@@ -40,11 +40,11 @@ export class SubjectService {
             newSubject.majors = await Promise.all(majorPromise);
         }
 
-        return await this.subjectRepository.save(newSubject);
+        return await this.SubjectRepository.save(newSubject);
     }
 
     async findAll(count?: number, index: number = 0) {
-        return await this.subjectRepository.find({
+        return await this.SubjectRepository.find({
             take: count,
             skip: index,
         });
@@ -52,22 +52,21 @@ export class SubjectService {
 
     async findOne(id: string) {
         console.log(
-            await this.subjectRepository.findOne({ where: { Id: id } }),
+            await this.SubjectRepository.findOne({ where: { Id: id } }),
         );
-        return await this.subjectRepository.findOne({
+        return await this.SubjectRepository.findOne({
             where: { Id: id },
             relations: ['majors', 'inTranscript', 'classes'],
         });
     }
 
     async update(id: string, updateSubjectDto: UpdateSubjectDto) {
-        await this.subjectRepository.update(id, updateSubjectDto);
-        await this.subjectRepository.findOne({ where: { Id: id } });
+        await this.SubjectRepository.update(id, updateSubjectDto);
+        return await this.SubjectRepository.findOne({ where: { Id: id } });
     }
 
     async remove(id: number) {
-        return await this.subjectRepository
-            .createQueryBuilder('subject')
+        return await this.SubjectRepository.createQueryBuilder('subject')
             .update()
             .set({ isDeleted: true })
             .where('subject.id = :id', { id })

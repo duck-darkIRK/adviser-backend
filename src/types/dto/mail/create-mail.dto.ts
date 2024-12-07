@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 
 @InputType()
 export class CreateMailDto {
-    @Field({ nullable: true })
+    @Field({ nullable: true, defaultValue: 'default' })
     @IsOptional()
     @IsString()
     type: 'default' | 'student' | 'all';

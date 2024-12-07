@@ -10,8 +10,6 @@ import {
     IsOptional,
     IsString,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Class, Major, Notification, Post } from '../../index';
 
 @InputType()
 export class UpdateUserDto {
@@ -71,40 +69,4 @@ export class UpdateUserDto {
     @IsString()
     @IsOptional()
     refresh_token?: string;
-
-    @Field(() => [Major], { nullable: true })
-    @IsArray()
-    @Type(() => Major)
-    @IsOptional()
-    majors?: Major[];
-
-    @Field(() => [Post], { nullable: true })
-    @IsArray()
-    @Type(() => Post)
-    @IsOptional()
-    readPosts?: Post[];
-
-    @Field(() => [Notification], { nullable: true })
-    @IsArray()
-    @Type(() => Notification)
-    @IsOptional()
-    notifications?: Notification[];
-
-    @Field(() => [Post], { nullable: true })
-    @IsArray()
-    @Type(() => Post)
-    @IsOptional()
-    likedPosts?: Post[];
-
-    @Field(() => [Class], { nullable: true })
-    @IsArray()
-    @Type(() => Class)
-    @IsOptional()
-    classes?: Class[];
-
-    @Field(() => [Class], { nullable: true })
-    @IsArray()
-    @Type(() => Class)
-    @IsOptional()
-    teach?: Class[];
 }

@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {
     ClassEntity,
     CommentEntity,
-    MailboxEntity,
     MailEntity,
     MajorEntity,
     NotificationEntity,
@@ -24,7 +23,6 @@ import { ClassModule } from './class/class.module';
 import { CommentModule } from './comment/comment.module';
 import { MailModule } from './mail/mail.module';
 import { MajorModule } from './major/major.module';
-import { NotificationModule } from './notification/notification.module';
 import { PostModule } from './post/post.module';
 import { SubjectModule } from './subject/subject.module';
 import { TimetableModule } from './timetable/timetable.module';
@@ -53,7 +51,6 @@ import { TranscriptModule } from './transcript/transcript.module';
                     CommentEntity,
                     MailEntity,
                     PostEntity,
-                    MailboxEntity,
                     NotificationEntity,
                     UserEntity,
                     TimetableSheetEntity,
@@ -75,7 +72,6 @@ import { TranscriptModule } from './transcript/transcript.module';
         CommentModule,
         MailModule,
         MajorModule,
-        NotificationModule,
         PostModule,
         SubjectModule,
         TimetableModule,

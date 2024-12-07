@@ -79,7 +79,7 @@ input CreateMailDto {
   replyToMail: Float
   replyToPost: Float
   sender: String!
-  type: String
+  type: String = "default"
 }
 
 input CreateMajorDto {
@@ -87,6 +87,13 @@ input CreateMajorDto {
   isDeleted: Boolean
   majorName: String!
   subjects: [String!]
+}
+
+input CreatePostDto {
+  content: String
+  image: [String]
+  title: String
+  user: String!
 }
 
 input CreateSubjectDto {
@@ -113,6 +120,24 @@ input CreateTranscriptDto {
   score: Float!
   subject: String!
   user: String!
+}
+
+input CreateUserDto {
+  avatar: String
+  birthdate: DateTime
+  code: Float!
+  createdAt: DateTime
+  email: String
+  firstName: String!
+  idPrefix: String
+  isBaned: Boolean
+  lastName: String!
+  majors: [String!]
+  password: String!
+  refresh_token: String
+  roles: [String!]!
+  updatedAt: DateTime
+  username: String!
 }
 
 """
@@ -148,26 +173,6 @@ type MailEntity {
   updatedAt: DateTime!
 }
 
-type Mailbox {
-  Id: ID!
-  createdAt: DateTime!
-  isDeleted: Boolean!
-  mailsCome: [Mail!]
-  mailsTo: [Mail!]
-  updatedAt: DateTime!
-  user: User!
-}
-
-type MailboxEntity {
-  Id: Int!
-  createdAt: DateTime!
-  isDeleted: Boolean!
-  mailsCome: [MailEntity!]
-  mailsTo: [MailEntity!]
-  updatedAt: DateTime!
-  user: UserEntity!
-}
-
 type Major {
   Id: ID!
   createdAt: DateTime!
@@ -189,24 +194,41 @@ type MajorEntity {
 }
 
 type Mutation {
+  addCommentToPost(commentId: Float!, postId: Float!): Boolean!
+  addReaderPost(postId: Float!, userId: String!): Boolean!
+  addStudentsToClass(classId: Float!, usersId: [String!]!): Boolean!
+  addSubjectsToMajor(majorId: String!, subjectsId: [String!]!): Boolean!
+  addTeachersToClass(classId: Float!, usersId: [String!]!): Boolean!
+  addUserLikePost(postId: Float!, userId: String!): Boolean!
   createClass(createClassDto: CreateClassDto!): ClassEntity!
   createComment(createCommentDto: CreateCommentDto!): CommentEntity!
   createMail(createMailDto: CreateMailDto!): MailEntity!
-  createMajor(createMajorDto: CreateMajorDto!): Major!
+  createMajor(createMajorDto: CreateMajorDto!): MajorEntity!
+  createPost(createPostDto: CreatePostDto!): PostEntity!
   createSubject(createSubjectDto: CreateSubjectDto!): SubjectEntity!
   createTimetable(createTimetableDto: CreateTimetableDto!): TimetableEntity!
   createTranscript(createTranscriptDto: CreateTranscriptDto!): TranscriptEntity!
+  createUser(createUserDto: CreateUserDto!): SafeUserEntity!
   deleteSubject(id: Float!): Boolean!
+  deleteUser(id: String!): SafeUserEntity!
   removeClass(id: Int!): Boolean!
   removeMajor(id: String!): Boolean!
+  removeStudentsFromClass(classId: Float!, usersId: [String!]!): Boolean!
+  removeSubjectsFromMajor(majorId: String!, subjectsId: [String!]!): Boolean!
+  removeTeachersFromClass(classId: Float!, usersId: [String!]!): Boolean!
   removeTimetable(id: Float!): Boolean!
+  removeUserLikePost(postId: Float!, userId: String!): Boolean!
+  timetableForm: TimetableSheetEntity!
   updateClass(id: Int!, updateClassDto: UpdateClassDto!): ClassEntity!
-  updateComment(id: Float!, updateCommentDto: UpdateCommentDto!): String!
+  updateComment(id: Float!, updateCommentDto: UpdateCommentDto!): CommentEntity!
   updateMail(id: Float!, updateMailDto: UpdateMailDto!): MailEntity!
-  updateMajor(id: String!, updateMajorDto: UpdateMajorDto!): Major!
+  updateMajor(id: String!, updateMajorDto: UpdateMajorDto!): MajorEntity!
+  updatePost(id: Int!, updatePostDto: UpdatePostDto!): PostEntity!
   updateSubject(id: String!, updateSubjectDto: UpdateSubjectDto!): SubjectEntity!
+  updateSubjectInClass(classId: String!, subjectId: String!): Boolean!
   updateTimetable(id: Float!, updateTimetableDto: UpdateTimetableDto!): TimetableEntity!
   updateTranscript(id: Float!, updateTranscriptDto: UpdateTranscriptDto!): TranscriptEntity!
+  updateUser(id: String!, updateUserDto: UpdateUserDto!): SafeUserEntity!
 }
 
 type Notification {
@@ -262,21 +284,52 @@ type PostEntity {
 }
 
 type Query {
-  findAllComments: [CommentEntity!]!
-  findAllTranscripts(count: Float!, index: Float!): [TranscriptEntity!]!
-  findOneComment(id: Float!): CommentEntity!
-  findOneTranscript(id: Float!): TranscriptEntity!
-  getAllClasses(count: Int, index: Int! = 0): [ClassEntity!]!
+  getAllClasses(count: Int, index: Int): [ClassEntity!]!
+  getAllComments: [CommentEntity!]!
   getAllMails(count: Int, index: Int): [MailEntity!]!
-  getAllMajors(count: Float, index: Float): [Major!]!
+  getAllMajors(count: Float, index: Float): [MajorEntity!]!
+  getAllPosts(count: Int, index: Int): [PostEntity!]!
   getAllSubjects(count: Float, index: Float = 0): [SubjectEntity!]!
-  getAllTimetables(count: Float!, index: Float!): [TimetableEntity!]!
+  getAllTimetables(count: Int, index: Int): [TimetableEntity!]!
+  getAllTranscripts(count: Float, index: Float): [TranscriptEntity!]!
   getClassById(id: Int!): ClassEntity!
-  getMail(id: Float!): MailEntity
-  getMajorById(id: String!): Major
+  getCommentById(id: Float!): CommentEntity!
+  getMailById(id: Float!): MailEntity
+  getMajorById(id: String!): MajorEntity
+  getPostById(id: Int!): PostEntity!
   getSubjectById(id: String!): SubjectEntity!
   getTimetableById(id: Float!): TimetableEntity
-  queryUserById(id: String!): User
+  getTranscriptById(id: Float!): TranscriptEntity!
+  getUserById(id: String!): SafeUserEntity!
+  getUserByUsername(username: String!): SafeUserEntity!
+}
+
+type SafeUserEntity {
+  Id: String!
+  avatar: String
+  birthdate: DateTime
+  classes: [ClassEntity!]!
+  code: Float!
+  comments: [CommentEntity!]!
+  createdAt: DateTime!
+  email: String
+  firstName: String!
+  idPrefix: String!
+  isBaned: Boolean!
+  isOnline: Boolean!
+  lastName: String!
+  likedPosts: [PostEntity!]!
+  majors: [MajorEntity!]!
+  notifications: [NotificationEntity!]!
+  phone: String
+  posts: [PostEntity!]!
+  readPosts: [PostEntity!]!
+  roles: [String!]
+  teach: [ClassEntity!]!
+  timetables: [TimetableEntity!]!
+  transcripts: [TranscriptEntity!]!
+  updatedAt: DateTime!
+  username: String!
 }
 
 type Subject {
@@ -377,6 +430,12 @@ input UpdateMajorDto {
   majorName: String
 }
 
+input UpdatePostDto {
+  content: String
+  image: [String]
+  title: String
+}
+
 input UpdateSubjectDto {
   isDeleted: Boolean
   subjectName: String
@@ -390,6 +449,20 @@ input UpdateTimetableDto {
 
 input UpdateTranscriptDto {
   score: Float
+}
+
+input UpdateUserDto {
+  avatar: String
+  birthdate: DateTime
+  email: String
+  firstName: String
+  idPrefix: String
+  isBaned: Boolean
+  lastName: String
+  password: String
+  refresh_token: String
+  roles: [String!]
+  username: String
 }
 
 type User {
@@ -407,7 +480,6 @@ type User {
   isOnline: Boolean!
   lastName: String!
   likedPosts: [Post!]
-  mail: Mailbox
   majors: [Major!]
   notifications: [Notification!]
   password: String!
@@ -438,15 +510,16 @@ type UserEntity {
   isOnline: Boolean!
   lastName: String!
   likedPosts: [PostEntity!]!
-  mail: MailboxEntity!
   majors: [MajorEntity!]!
   notifications: [NotificationEntity!]!
   password: String!
   phone: String
   posts: [PostEntity!]!
   readPosts: [PostEntity!]!
+  receive: [MailEntity!]!
   refresh_token: String
   roles: [String!]
+  send: [MailEntity!]!
   teach: [ClassEntity!]!
   timetables: [TimetableEntity!]!
   transcripts: [TranscriptEntity!]!

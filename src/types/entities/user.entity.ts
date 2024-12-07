@@ -4,22 +4,20 @@ import {
     CreateDateColumn,
     Entity,
     Generated,
-    JoinColumn,
     JoinTable,
     ManyToMany,
     OneToMany,
-    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { MajorEntity } from './major.entity';
 import { TranscriptEntity } from './transcript.entity';
-import { MailboxEntity } from './mailbox.entity';
 import { TimetableEntity } from './timetable.entity';
 import { NotificationEntity } from './notification.entity';
 import { PostEntity } from './post.entity';
 import { CommentEntity } from './comment.entity';
 import { ClassEntity } from './class.entity';
+import { MailEntity } from './mail.entity';
 
 @ObjectType()
 @Entity()
@@ -81,10 +79,13 @@ export class UserEntity {
     @OneToMany(() => TranscriptEntity, (transcript) => transcript.user)
     transcripts: TranscriptEntity[];
 
-    @Field(() => MailboxEntity)
-    @OneToOne(() => MailboxEntity, (mailbox) => mailbox.user)
-    @JoinColumn({ name: 'mailbox' })
-    mail: MailboxEntity;
+    @Field(() => [MailEntity])
+    @OneToMany(() => MailEntity, (mail) => mail.sender)
+    send: MailEntity[];
+
+    @Field(() => [MailEntity])
+    @OneToMany(() => MailEntity, (mail) => mail.receiver)
+    receive: MailEntity[];
 
     @Field(() => [TimetableEntity])
     @OneToMany(() => TimetableEntity, (timetable) => timetable.user)
@@ -137,5 +138,83 @@ export class UserEntity {
 
     @Field()
     @UpdateDateColumn()
+    updatedAt: Date;
+}
+
+@ObjectType()
+export class SafeUserEntity {
+    @Field()
+    Id: string;
+
+    @Field()
+    code: number;
+
+    @Field({ nullable: true })
+    avatar: string;
+
+    @Field()
+    idPrefix: string;
+
+    @Field()
+    isOnline: boolean;
+
+    @Field()
+    isBaned: boolean;
+
+    @Field()
+    firstName: string;
+
+    @Field()
+    lastName: string;
+
+    @Field({ nullable: true })
+    birthdate: Date;
+
+    @Field({ nullable: true })
+    email: string;
+
+    @Field({ nullable: true })
+    phone: string;
+
+    @Field(() => [String], { nullable: true })
+    roles: string[];
+
+    @Field(() => [MajorEntity])
+    majors: MajorEntity[];
+
+    @Field(() => [TranscriptEntity])
+    transcripts: TranscriptEntity[];
+
+    @Field(() => [TimetableEntity])
+    timetables: TimetableEntity[];
+
+    @Field(() => [NotificationEntity])
+    notifications: NotificationEntity[];
+
+    @Field(() => [PostEntity])
+    posts: PostEntity[];
+
+    @Field(() => [PostEntity])
+    readPosts: PostEntity[];
+
+    @Field(() => [PostEntity])
+    likedPosts: PostEntity[];
+
+    @Field(() => [ClassEntity])
+    classes: ClassEntity[];
+
+    @Field(() => [ClassEntity])
+    teach: ClassEntity[];
+
+    @Field(() => [CommentEntity])
+    comments: CommentEntity[];
+
+    @Field()
+    username: string;
+
+    @Field()
+    createdAt: Date;
+
+    @Field()
     updatedAt: Date;
 }

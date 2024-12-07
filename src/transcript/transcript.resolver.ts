@@ -18,15 +18,17 @@ export class TranscriptResolver {
         return await this.transcriptService.create(createTranscriptDto);
     }
 
-    @Query(() => [TranscriptEntity], { name: 'findAllTranscripts' })
+    @Query(() => [TranscriptEntity], { name: 'getAllTranscripts' })
     async findAllTranscripts(
-        @Args('count', ParseIntPipe) count?: number,
-        @Args('index', ParseIntPipe) index?: number,
+        @Args('count', { type: () => Number, nullable: true })
+        count?: number,
+        @Args('index', { type: () => Number, nullable: true })
+        index?: number,
     ) {
         return await this.transcriptService.findAll(count, index);
     }
 
-    @Query(() => TranscriptEntity, { name: 'findOneTranscript' })
+    @Query(() => TranscriptEntity, { name: 'getTranscriptById' })
     async findOneTranscript(@Args('id', ParseIntPipe) id: number) {
         return await this.transcriptService.findOne(id);
     }

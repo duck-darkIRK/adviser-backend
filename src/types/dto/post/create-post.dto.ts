@@ -1,7 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { Type } from 'class-transformer';
-import { User } from '../../index';
 
 @InputType()
 export class CreatePostDto {
@@ -20,8 +18,7 @@ export class CreatePostDto {
     @IsArray()
     image?: string[];
 
-    @Field(() => User)
+    @Field()
     @IsNotEmpty()
-    @Type(() => User)
-    user: User;
+    user: string;
 }

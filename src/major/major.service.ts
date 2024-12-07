@@ -13,22 +13,22 @@ import {
 export class MajorService {
     constructor(
         @InjectRepository(MajorEntity)
-        private readonly majorRepository: Repository<MajorEntity>,
+        private readonly MajorRepository: Repository<MajorEntity>,
         @InjectRepository(UserEntity)
-        private readonly userRepository: Repository<UserEntity>,
+        private readonly UserRepository: Repository<UserEntity>,
         @InjectRepository(SubjectEntity)
-        private readonly subjectRepository: Repository<SubjectEntity>,
+        private readonly SubjectRepository: Repository<SubjectEntity>,
     ) {}
 
     async create(createMajorDto: CreateMajorDto) {
         const { subjects, ...dto } = createMajorDto;
-        const newMajor = this.majorRepository.create(dto);
+        const newMajor = this.MajorRepository.create(dto);
 
         if (subjects && subjects.length > 0) {
             newMajor.subjects = [];
 
             const subjectPromises = subjects.map(async (s) => {
-                const subject = await this.subjectRepository.findOne({
+                const subject = await this.SubjectRepository.findOne({
                     where: { Id: s },
                 });
                 if (!subject) {
@@ -42,31 +42,94 @@ export class MajorService {
             newMajor.subjects = await Promise.all(subjectPromises);
         }
 
-        return await this.majorRepository.save(newMajor);
+        return await this.MajorRepository.save(newMajor);
     }
 
     async findAll(count?: number, index: number = 0) {
-        return await this.majorRepository.find({
+        return await this.MajorRepository.find({
             skip: index,
             take: count,
         });
     }
 
     async findOne(id: string) {
-        return await this.majorRepository.findOne({ where: { Id: id } });
+        return await this.MajorRepository.findOne({
+            where: { Id: id },
+            relations: ['subjects'],
+        });
     }
 
     async update(id: string, updateMajorDto: UpdateMajorDto) {
-        await this.majorRepository.update(id, updateMajorDto);
-        return this.majorRepository.findOne({ where: { Id: id } });
+        await this.MajorRepository.update(id, updateMajorDto);
+        return this.MajorRepository.findOne({ where: { Id: id } });
     }
 
     async remove(id: string) {
-        return await this.majorRepository
-            .createQueryBuilder()
+        return await this.MajorRepository.createQueryBuilder()
             .update()
             .set({ isDeleted: true })
             .where('Id = :id', { id })
             .execute();
+    }
+
+    async addSubjectsToMajor(subjectsId: string[], majorId: string) {
+        const majorEntity = await this.MajorRepository.findOne({
+            where: { Id: majorId },
+            relations: { subjects: true },
+        });
+        if (!majorEntity) {
+            throw new NotFoundException(`Major with Id: ${majorId} not found.`);
+        }
+        if (new Set(subjectsId).size != subjectsId.length) {
+            throw new NotFoundException(`Subjects were duplicate`);
+        }
+        const subjectsEntity = subjectsId.map(async (subjectId) => {
+            const user = await this.SubjectRepository.findOne({
+                where: { Id: subjectId },
+            });
+            if (user) {
+                return user;
+            } else {
+                throw new NotFoundException(
+                    `Subject with Id: ${user} not found.`,
+                );
+            }
+        });
+        majorEntity.subjects = [
+            ...majorEntity.subjects,
+            ...(await Promise.all(subjectsEntity)),
+        ];
+        return await this.MajorRepository.save(majorEntity);
+    }
+
+    async removeSubjectsToClass(subjectsId: string[], majorId: string) {
+        const MajorEntity = await this.MajorRepository.findOne({
+            where: { Id: majorId },
+            relations: { subjects: true },
+        });
+        if (!MajorEntity) {
+            throw new NotFoundException(`Major with Id: ${majorId} not found.`);
+        }
+        if (new Set(subjectsId).size != subjectsId.length) {
+            throw new NotFoundException(`Subject were duplicate`);
+        }
+        await Promise.all(
+            subjectsId.map(async (subjectId) => {
+                const subject = await this.MajorRepository.findOne({
+                    where: { Id: subjectId },
+                });
+                if (subject) {
+                    return subject;
+                } else {
+                    throw new NotFoundException(
+                        `Subject with Id: ${subject} not found.`,
+                    );
+                }
+            }),
+        );
+        MajorEntity.subjects = MajorEntity.subjects.filter(
+            (subject) => !majorId.includes(subject.Id),
+        );
+        return await this.MajorRepository.save(MajorEntity);
     }
 }

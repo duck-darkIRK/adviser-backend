@@ -12,8 +12,6 @@ import {
     IsOptional,
     IsString,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Class, Mailbox, Major, Notification, Post } from '../../index';
 
 @InputType()
 export class CreateUserDto {
@@ -61,9 +59,9 @@ export class CreateUserDto {
     @IsIn(['admin', 'teacher', 'student', 'superAdmin'], { each: true })
     roles: ('admin' | 'teacher' | 'student' | 'superAdmin')[];
 
-    @Field({ nullable: true })
+    @Field()
     @IsString()
-    username?: string;
+    username: string;
 
     @Field()
     @IsString()
@@ -80,43 +78,8 @@ export class CreateUserDto {
     @Field({ nullable: true })
     updatedAt?: Date;
 
-    @Field(() => [Major], { nullable: true })
+    @Field(() => [String], { nullable: true })
     @IsArray()
-    @Type(() => Major)
     @IsOptional()
-    majors?: Major[];
-
-    @Field(() => [Post], { nullable: true })
-    @IsArray()
-    @Type(() => Post)
-    @IsOptional()
-    readPosts?: Post[];
-
-    @Field(() => Mailbox)
-    @Type(() => Mailbox)
-    mail: Mailbox;
-
-    @Field(() => [Notification], { nullable: true })
-    @IsArray()
-    @Type(() => Notification)
-    @IsOptional()
-    notifications?: Notification[];
-
-    @Field(() => [Post], { nullable: true })
-    @IsArray()
-    @Type(() => Post)
-    @IsOptional()
-    likedPosts?: Post[];
-
-    @Field(() => [Class], { nullable: true })
-    @IsArray()
-    @Type(() => Class)
-    @IsOptional()
-    classes?: Class[];
-
-    @Field(() => [Class], { nullable: true })
-    @IsArray()
-    @Type(() => Class)
-    @IsOptional()
-    teach?: Class[];
+    majors?: string[];
 }

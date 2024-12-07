@@ -9,8 +9,8 @@ export class ClassResolver {
 
     @Query(() => [ClassEntity])
     async getAllClasses(
-        @Args('count', { type: () => Int, nullable: true }) count: number,
-        @Args('index', { type: () => Int, defaultValue: 0 }) index: number,
+        @Args('count', { type: () => Int, nullable: true }) count?: number,
+        @Args('index', { type: () => Int, nullable: true }) index?: number,
     ) {
         return this.classService.findAll(count, index);
     }
@@ -45,5 +45,70 @@ export class ClassResolver {
     async removeClass(@Args('id', { type: () => Int }) id: number) {
         const result = await this.classService.remove(id);
         return result.affected > 0;
+    }
+
+    @Mutation(() => Boolean)
+    async updateSubjectInClass(
+        @Args('subjectId', { type: () => String }) subjectId: string,
+        @Args('classId', { type: () => String }) classId: number,
+    ) {
+        try {
+            await this.classService.updateSubjectInClass(subjectId, classId);
+            return true;
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
+    }
+
+    @Mutation(() => Boolean)
+    async addStudentsToClass(
+        @Args('usersId', { type: () => [String] }) usersId: string[],
+        @Args('classId') classId: number,
+    ) {
+        try {
+            await this.classService.addStudentsToClass(usersId, classId);
+            return true;
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
+    }
+
+    @Mutation(() => Boolean)
+    async removeStudentsFromClass(
+        @Args('usersId', { type: () => [String] }) usersId: string[],
+        @Args('classId') classId: number,
+    ) {
+        try {
+            await this.classService.removeStudentsToClass(usersId, classId);
+            return true;
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
+    }
+
+    @Mutation(() => Boolean)
+    async addTeachersToClass(
+        @Args('usersId', { type: () => [String] }) usersId: string[],
+        @Args('classId') classId: number,
+    ) {
+        try {
+            await this.classService.addTeachersToClass(usersId, classId);
+            return true;
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
+    }
+
+    @Mutation(() => Boolean)
+    async removeTeachersFromClass(
+        @Args('usersId', { type: () => [String] }) usersId: string[],
+        @Args('classId') classId: number,
+    ) {
+        try {
+            await this.classService.removeTeachersToClass(usersId, classId);
+            return true;
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
     }
 }

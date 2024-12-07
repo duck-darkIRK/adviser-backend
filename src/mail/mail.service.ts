@@ -102,7 +102,16 @@ export class MailService {
     }
 
     async findOne(id: number) {
-        return await this.mailRepository.findOne({ where: { Id: id } });
+        return await this.mailRepository.findOne({
+            where: { Id: id },
+            relations: [
+                'sender',
+                'receiver',
+                'replyToMail',
+                'replyToPost',
+                'replyToCmt',
+            ],
+        });
     }
 
     async update(id: number, updateMailDto: UpdateMailDto) {

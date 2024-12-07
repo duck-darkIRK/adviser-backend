@@ -1,8 +1,10 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TimetableService } from './timetable.service';
 import {
     CreateTimetableDto,
+    CreateTimetableSheetDto,
     TimetableEntity,
+    TimetableSheetEntity,
     UpdateTimetableDto,
 } from '../types';
 import { ParseIntPipe } from '@nestjs/common';
@@ -20,8 +22,9 @@ export class TimetableResolver {
 
     @Query(() => [TimetableEntity])
     async getAllTimetables(
-        @Args('count', ParseIntPipe) count?: number,
-        @Args('index', ParseIntPipe)
+        @Args('count', { type: () => Int, nullable: true })
+        count?: number,
+        @Args('index', { type: () => Int, nullable: true })
         index?: number,
     ): Promise<TimetableEntity[]> {
         return await this.timetableService.findAll(count, index);
@@ -49,4 +52,9 @@ export class TimetableResolver {
         await this.timetableService.remove(id);
         return true;
     }
+
+    @Mutation(() => TimetableSheetEntity)
+    async timetableForm(
+        createTimetableSheetDto: CreateTimetableSheetDto,
+    ): Promise<void> {}
 }

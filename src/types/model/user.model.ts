@@ -2,7 +2,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Major } from './major.model';
 import { Transcript } from './transcript.model';
-import { Mailbox } from './mailbox.model';
 import { Timetable } from './timetable.model';
 import { Notification } from './notification.model';
 import { Post } from './post.model';
@@ -52,9 +51,6 @@ export class User {
 
     @Field(() => [Transcript], { nullable: true })
     transcripts: Transcript[];
-
-    @Field(() => Mailbox, { nullable: true })
-    mail: Mailbox;
 
     @Field(() => [Timetable], { nullable: true })
     timetables: Timetable[];

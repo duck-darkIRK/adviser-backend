@@ -14,19 +14,19 @@ export class CommentResolver {
         return this.commentService.create(createCommentDto);
     }
 
-    @Query(() => [CommentEntity], { name: 'findAllComments' })
+    @Query(() => [CommentEntity], { name: 'getAllComments' })
     async findAll(): Promise<CommentEntity[]> {
         return this.commentService.findAll();
     }
 
-    @Query(() => CommentEntity, { name: 'findOneComment' })
+    @Query(() => CommentEntity, { name: 'getCommentById' })
     async findOne(
         @Args('id', ParseIntPipe) id: number,
     ): Promise<CommentEntity> {
         return this.commentService.findOne(id);
     }
 
-    @Mutation(() => String)
+    @Mutation(() => CommentEntity)
     async updateComment(
         @Args('id', ParseIntPipe) id: number,
         @Args('updateCommentDto') updateCommentDto: UpdateCommentDto,

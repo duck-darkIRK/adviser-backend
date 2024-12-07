@@ -5,7 +5,6 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
-    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -33,12 +32,12 @@ export class MailEntity {
     content: string;
 
     @Field(() => UserEntity, { nullable: true })
-    @OneToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity)
     @JoinColumn({ name: 'sender' })
     sender: UserEntity;
 
     @Field(() => UserEntity, { nullable: true })
-    @OneToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity)
     @JoinColumn({ name: 'receiver' })
     receiver: UserEntity;
 

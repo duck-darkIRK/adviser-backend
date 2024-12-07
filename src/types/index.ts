@@ -4,7 +4,6 @@ import { TranscriptEntity } from './entities/transcript.entity';
 import { ClassEntity } from './entities/class.entity';
 import { SubjectEntity } from './entities/subject.entity';
 import { NotificationEntity } from './entities/notification.entity';
-import { MailboxEntity } from './entities/mailbox.entity';
 import { MailEntity } from './entities/mail.entity';
 import { PostEntity } from './entities/post.entity';
 import { CommentEntity } from './entities/comment.entity';
@@ -18,8 +17,6 @@ import { CreateCommentDto } from './dto/comment/create-comment.dto';
 import { UpdateCommentDto } from './dto/comment/update-comment.dto';
 import { CreateMailDto } from './dto/mail/create-mail.dto';
 import { UpdateMailDto } from './dto/mail/update-mail.dto';
-import { CreateMailboxDto } from './dto/mailbox/create-mailbox.dto';
-import { UpdateMailboxDto } from './dto/mailbox/update-mailbox.dto';
 import { CreateMajorDto } from './dto/major/create-major.dto';
 import { UpdateMajorDto } from './dto/major/update-major.dto';
 import { CreateNotificationDto } from './dto/notification/create-notification.dto';
@@ -39,7 +36,6 @@ import { UpdateUserDto } from './dto/user/update-user.dto';
 
 // Import the new models
 import { User } from './model/user.model';
-import { Mailbox } from './model/mailbox.model';
 import { Mail } from './model/mail.model';
 import { Notification } from './model/notification.model';
 import { Post } from './model/post.model';
@@ -51,68 +47,6 @@ import { Subject } from './model/subject.model';
 import { Class } from './model/class.model';
 import { Major } from './model/major.model';
 
-// Import the new input graph
-import {
-    CreateUserInput,
-    SearchUserInput,
-    UpdateUserInput,
-} from './input/user.input';
-import {
-    CreateMailboxInput,
-    SearchMailboxInput,
-    UpdateMailboxInput,
-} from './input/mailbox.input';
-import {
-    CreateMailInput,
-    SearchMailInput,
-    UpdateMailInput,
-} from './input/mail.input';
-import {
-    CreateNotificationInput,
-    SearchNotificationInput,
-    UpdateNotificationInput,
-} from './input/notification.input';
-import {
-    CreatePostInput,
-    SearchPostInput,
-    UpdatePostInput,
-} from './input/post.input';
-import {
-    CreateCommentInput,
-    SearchCommentInput,
-    UpdateCommentInput,
-} from './input/comment.input';
-import {
-    CreateTimetableInput,
-    SearchTimetableInput,
-    UpdateTimetableInput,
-} from './input/timetable.input';
-import {
-    CreateTimetableSheetInput,
-    SearchTimetableSheetInput,
-    UpdateTimetableSheetInput,
-} from './input/timetableSheet.input';
-import {
-    CreateTranscriptInput,
-    SearchTranscriptInput,
-    UpdateTranscriptInput,
-} from './input/transcript.input';
-import {
-    CreateSubjectInput,
-    SearchSubjectInput,
-    UpdateSubjectInput,
-} from './input/subject.input';
-import {
-    CreateClassInput,
-    SearchClassInput,
-    UpdateClassInput,
-} from './input/class.input';
-import {
-    CreateMajorInput,
-    SearchMajorInput,
-    UpdateMajorInput,
-} from './input/major.input';
-
 export {
     User,
     Major,
@@ -120,7 +54,6 @@ export {
     Class,
     Subject,
     Notification,
-    Mailbox,
     Mail,
     Post,
     Comment,
@@ -132,7 +65,6 @@ export {
     ClassEntity,
     SubjectEntity,
     NotificationEntity,
-    MailboxEntity,
     MailEntity,
     PostEntity,
     CommentEntity,
@@ -144,8 +76,6 @@ export {
     UpdateCommentDto,
     CreateMailDto,
     UpdateMailDto,
-    CreateMailboxDto,
-    UpdateMailboxDto,
     CreateMajorDto,
     UpdateMajorDto,
     CreateNotificationDto,
@@ -162,40 +92,4 @@ export {
     UpdateTranscriptDto,
     CreateUserDto,
     UpdateUserDto,
-    CreateUserInput,
-    UpdateUserInput,
-    SearchUserInput,
-    CreateMailboxInput,
-    UpdateMailboxInput,
-    SearchMailboxInput,
-    CreateMailInput,
-    UpdateMailInput,
-    SearchMailInput,
-    CreateNotificationInput,
-    UpdateNotificationInput,
-    SearchNotificationInput,
-    CreatePostInput,
-    UpdatePostInput,
-    SearchPostInput,
-    CreateCommentInput,
-    UpdateCommentInput,
-    SearchCommentInput,
-    CreateTimetableInput,
-    UpdateTimetableInput,
-    SearchTimetableInput,
-    CreateTimetableSheetInput,
-    UpdateTimetableSheetInput,
-    SearchTimetableSheetInput,
-    CreateTranscriptInput,
-    UpdateTranscriptInput,
-    SearchTranscriptInput,
-    CreateSubjectInput,
-    UpdateSubjectInput,
-    SearchSubjectInput,
-    CreateClassInput,
-    UpdateClassInput,
-    SearchClassInput,
-    CreateMajorInput,
-    UpdateMajorInput,
-    SearchMajorInput,
 };

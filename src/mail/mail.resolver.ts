@@ -15,7 +15,7 @@ export class MailResolver {
         return this.mailService.findAll(count, index);
     }
 
-    @Query(() => MailEntity, { nullable: true })
+    @Query(() => MailEntity, { nullable: true, name: 'getMailById' })
     async getMail(@Args('id', ParseIntPipe) id: number) {
         return this.mailService.findOne(id);
     }

@@ -2,15 +2,16 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MajorService } from './major.service';
 import {
     CreateMajorDto,
-    Major,
+    MajorEntity,
     SubjectEntity,
     UpdateMajorDto,
     UserEntity,
 } from '../types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { NotFoundException } from '@nestjs/common';
 
-@Resolver(() => Major)
+@Resolver(() => MajorEntity)
 export class MajorResolver {
     constructor(
         private readonly majorService: MajorService,
@@ -20,7 +21,7 @@ export class MajorResolver {
         private readonly subjectRepository: Repository<SubjectEntity>,
     ) {}
 
-    @Query(() => [Major])
+    @Query(() => [MajorEntity])
     async getAllMajors(
         @Args('index', { type: () => Number, nullable: true })
         index?: number,
@@ -30,17 +31,17 @@ export class MajorResolver {
         return this.majorService.findAll(count ?? count, index ?? index);
     }
 
-    @Query(() => Major, { nullable: true })
+    @Query(() => MajorEntity, { nullable: true })
     async getMajorById(@Args('id', { type: () => String }) id: string) {
         return this.majorService.findOne(id);
     }
 
-    @Mutation(() => Major) // Trả về Major ObjectType
+    @Mutation(() => MajorEntity)
     async createMajor(@Args('createMajorDto') createMajorDto: CreateMajorDto) {
         return this.majorService.create(createMajorDto);
     }
 
-    @Mutation(() => Major) // Trả về Major ObjectType
+    @Mutation(() => MajorEntity)
     async updateMajor(
         @Args('updateMajorDto') updateMajorDto: UpdateMajorDto,
         @Args('id', { type: () => String }) id: string,
@@ -52,5 +53,31 @@ export class MajorResolver {
     async removeMajor(@Args('id', { type: () => String }) id: string) {
         await this.majorService.remove(id);
         return true;
+    }
+
+    @Mutation(() => Boolean)
+    async addSubjectsToMajor(
+        @Args('subjectsId', { type: () => [String] }) subjectsId: string[],
+        @Args('majorId') majorId: string,
+    ) {
+        try {
+            await this.majorService.addSubjectsToMajor(subjectsId, majorId);
+            return true;
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
+    }
+
+    @Mutation(() => Boolean)
+    async removeSubjectsFromMajor(
+        @Args('subjectsId', { type: () => [String] }) subjectsId: string[],
+        @Args('majorId') majorId: string,
+    ) {
+        try {
+            await this.majorService.removeSubjectsToClass(subjectsId, majorId);
+            return true;
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
     }
 }
