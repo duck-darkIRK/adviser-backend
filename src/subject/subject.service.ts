@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
     ClassEntity,
@@ -9,7 +9,14 @@ import {
     UpdateSubjectDto,
 } from '../types';
 import { Repository } from 'typeorm';
+import { Roles } from '../decorator/roles.decorator';
+import { Role } from '../auth/role.enum';
+import { GqlRolesGuard } from '../auth/gqlRoles.guard';
+import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 
+@Roles(Role.Admin)
+@UseGuards(GqlRolesGuard)
+@UseGuards(GqlAuthGuard)
 @Injectable()
 export class SubjectService {
     constructor(

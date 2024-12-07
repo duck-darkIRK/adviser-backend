@@ -56,6 +56,7 @@ import { TranscriptModule } from './transcript/transcript.module';
                     TimetableSheetEntity,
                 ],
                 synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
+                logging: true,
             }),
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({

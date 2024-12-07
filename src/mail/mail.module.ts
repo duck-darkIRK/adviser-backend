@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
-import { MailController } from './mail.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentEntity, MailEntity, PostEntity, UserEntity } from '../types';
 import { MailResolver } from './mail.resolver';
@@ -14,7 +13,7 @@ import { MailResolver } from './mail.resolver';
             CommentEntity,
         ]),
     ],
-    controllers: [MailController],
+    controllers: [],
     providers: [MailService, MailResolver],
     exports: [TypeOrmModule, MailService],
 })

@@ -9,8 +9,16 @@ import {
 } from '../types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
+import { Roles } from '../decorator/roles.decorator';
+import { Role } from '../auth/role.enum';
+import { GqlRolesGuard } from '../auth/gqlRoles.guard';
+import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
+import { Public } from '../decorator/guard.config';
 
+@Roles(Role.Admin)
+@UseGuards(GqlRolesGuard)
+@UseGuards(GqlAuthGuard)
 @Resolver(() => MajorEntity)
 export class MajorResolver {
     constructor(
@@ -21,6 +29,7 @@ export class MajorResolver {
         private readonly subjectRepository: Repository<SubjectEntity>,
     ) {}
 
+    @Public()
     @Query(() => [MajorEntity])
     async getAllMajors(
         @Args('index', { type: () => Number, nullable: true })
@@ -31,6 +40,7 @@ export class MajorResolver {
         return this.majorService.findAll(count ?? count, index ?? index);
     }
 
+    @Public()
     @Query(() => MajorEntity, { nullable: true })
     async getMajorById(@Args('id', { type: () => String }) id: string) {
         return this.majorService.findOne(id);

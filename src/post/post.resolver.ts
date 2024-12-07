@@ -1,8 +1,16 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PostService } from './post.service';
 import { CreatePostDto, PostEntity, UpdatePostDto } from '../types';
-import { ParseIntPipe } from '@nestjs/common';
+import { Roles } from '../decorator/roles.decorator';
+import { Role } from '../auth/role.enum';
+import { UseGuards } from '@nestjs/common';
+import { GqlRolesGuard } from '../auth/gqlRoles.guard';
+import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
+import { Public } from '../decorator/guard.config';
 
+@Roles(Role.Admin)
+@UseGuards(GqlRolesGuard)
+@UseGuards(GqlAuthGuard)
 @Resolver(() => PostEntity)
 export class PostResolver {
     constructor(private readonly postService: PostService) {}
@@ -14,14 +22,16 @@ export class PostResolver {
         return this.postService.create(createPostDto);
     }
 
-    @Query(() => [PostEntity])
+    @Public()
+    @Query(() => [PostEntity], { name: 'getAllPosts' })
     async getPosts(
-        @Args('count', ParseIntPipe) count?: number,
-        @Args('index', ParseIntPipe) index?: number,
+        @Args('count', { type: () => Int, nullable: true }) count?: number,
+        @Args('index', { type: () => Int, nullable: true }) index?: number,
     ): Promise<PostEntity[]> {
         return this.postService.findAll(count, index);
     }
 
+    @Public()
     @Query(() => PostEntity)
     async getPostById(
         @Args('id', { type: () => Int }) id: number,
@@ -35,5 +45,41 @@ export class PostResolver {
         @Args('updatePostDto') updatePostDto: UpdatePostDto,
     ): Promise<PostEntity> {
         return this.postService.update(id, updatePostDto);
+    }
+
+    @Mutation(() => Boolean)
+    async addUserLikePost(
+        @Args('userId') userId: string,
+        @Args('postId') postId: number,
+    ) {
+        await this.postService.addUserLikePost(userId, postId);
+        return true;
+    }
+
+    @Mutation(() => Boolean)
+    async removeUserLikePost(
+        @Args('userId') userId: string,
+        @Args('postId') postId: number,
+    ) {
+        await this.postService.removeUserLikePost(userId, postId);
+        return true;
+    }
+
+    @Mutation(() => Boolean)
+    async addReaderPost(
+        @Args('userId') userId: string,
+        @Args('postId') postId: number,
+    ) {
+        await this.postService.addReaderPost(userId, postId);
+        return true;
+    }
+
+    @Mutation(() => Boolean)
+    async addCommentToPost(
+        @Args('commentId') commentId: number,
+        @Args('postId') postId: number,
+    ) {
+        await this.postService.addCommentToPost(commentId, postId);
+        return true;
     }
 }

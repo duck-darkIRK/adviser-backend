@@ -7,8 +7,15 @@ import {
     TimetableSheetEntity,
     UpdateTimetableDto,
 } from '../types';
-import { ParseIntPipe } from '@nestjs/common';
+import { ParseIntPipe, UseGuards } from '@nestjs/common';
+import { GqlRolesGuard } from '../auth/gqlRoles.guard';
+import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
+import { Roles } from '../decorator/roles.decorator';
+import { Role } from '../auth/role.enum';
 
+@Roles(Role.Admin)
+@UseGuards(GqlRolesGuard)
+@UseGuards(GqlAuthGuard)
 @Resolver(() => TimetableEntity)
 export class TimetableResolver {
     constructor(private readonly timetableService: TimetableService) {}

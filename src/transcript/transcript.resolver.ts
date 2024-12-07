@@ -5,8 +5,15 @@ import {
     TranscriptEntity,
     UpdateTranscriptDto,
 } from '../types';
-import { ParseIntPipe } from '@nestjs/common';
+import { ParseIntPipe, UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
+import { GqlRolesGuard } from '../auth/gqlRoles.guard';
+import { Roles } from '../decorator/roles.decorator';
+import { Role } from '../auth/role.enum';
 
+@Roles(Role.Admin)
+@UseGuards(GqlRolesGuard)
+@UseGuards(GqlAuthGuard)
 @Resolver(() => TranscriptEntity)
 export class TranscriptResolver {
     constructor(private readonly transcriptService: TranscriptService) {}

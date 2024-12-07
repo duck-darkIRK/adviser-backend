@@ -284,6 +284,7 @@ type PostEntity {
 }
 
 type Query {
+  User_getAllMails(count: Int, index: Int): Boolean!
   getAllClasses(count: Int, index: Int): [ClassEntity!]!
   getAllComments: [CommentEntity!]!
   getAllMails(count: Int, index: Int): [MailEntity!]!
@@ -292,6 +293,7 @@ type Query {
   getAllSubjects(count: Float, index: Float = 0): [SubjectEntity!]!
   getAllTimetables(count: Int, index: Int): [TimetableEntity!]!
   getAllTranscripts(count: Float, index: Float): [TranscriptEntity!]!
+  getAllUsers(by: SearchUserDto, count: Float, index: Float): [SafeUserEntity!]!
   getClassById(id: Int!): ClassEntity!
   getCommentById(id: Float!): CommentEntity!
   getMailById(id: Float!): MailEntity
@@ -330,6 +332,16 @@ type SafeUserEntity {
   transcripts: [TranscriptEntity!]!
   updatedAt: DateTime!
   username: String!
+}
+
+input SearchUserDto {
+  email: String
+  firstName: String
+  isBaned: Boolean
+  isOnline: Boolean
+  lastName: String
+  relations: [String!]
+  roles: [String!]
 }
 
 type Subject {

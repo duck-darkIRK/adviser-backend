@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { SubjectService } from './subject.service';
-import { SubjectController } from './subject.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
     ClassEntity,
@@ -19,7 +18,7 @@ import { SubjectResolver } from './subject.resolver';
             MajorEntity,
         ]),
     ],
-    controllers: [SubjectController],
+    controllers: [],
     providers: [SubjectService, SubjectResolver],
     exports: [TypeOrmModule],
 })

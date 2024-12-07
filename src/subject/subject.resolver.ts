@@ -1,11 +1,21 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SubjectService } from './subject.service';
 import { CreateSubjectDto, SubjectEntity, UpdateSubjectDto } from '../types';
+import { Roles } from '../decorator/roles.decorator';
+import { Role } from '../auth/role.enum';
+import { UseGuards } from '@nestjs/common';
+import { GqlRolesGuard } from '../auth/gqlRoles.guard';
+import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
+import { Public } from '../decorator/guard.config';
 
+@Roles(Role.Admin)
+@UseGuards(GqlRolesGuard)
+@UseGuards(GqlAuthGuard)
 @Resolver(() => SubjectEntity)
 export class SubjectResolver {
     constructor(private readonly subjectService: SubjectService) {}
 
+    @Public()
     @Query(() => [SubjectEntity], { name: 'getAllSubjects' })
     async findAll(
         @Args('count', { type: () => Number, nullable: true }) count?: number,
@@ -15,6 +25,7 @@ export class SubjectResolver {
         return await this.subjectService.findAll(count, index);
     }
 
+    @Public()
     @Query(() => SubjectEntity, { name: 'getSubjectById' })
     async findOne(@Args('id', { type: () => String }) id: string) {
         return await this.subjectService.findOne(id);

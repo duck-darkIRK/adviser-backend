@@ -33,12 +33,12 @@ export class ClassEntity {
     size: number;
 
     @Field(() => [UserEntity])
-    @ManyToMany(() => UserEntity)
+    @ManyToMany(() => UserEntity, (user) => user.classes)
     @JoinTable()
     students: UserEntity[];
 
     @Field(() => [UserEntity])
-    @ManyToMany(() => UserEntity)
+    @ManyToMany(() => UserEntity, (user) => user.teach)
     @JoinTable()
     teachers: UserEntity[];
 

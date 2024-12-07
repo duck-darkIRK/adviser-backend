@@ -1,8 +1,15 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CommentService } from './comment.service';
 import { CommentEntity, CreateCommentDto, UpdateCommentDto } from '../types';
-import { ParseIntPipe } from '@nestjs/common';
+import { ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Roles } from '../decorator/roles.decorator';
+import { Role } from '../auth/role.enum';
+import { GqlRolesGuard } from '../auth/gqlRoles.guard';
+import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 
+@Roles(Role.Admin)
+@UseGuards(GqlRolesGuard)
+@UseGuards(GqlAuthGuard)
 @Resolver(() => CommentEntity)
 export class CommentResolver {
     constructor(private readonly commentService: CommentService) {}

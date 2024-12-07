@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TimetableService } from './timetable.service';
-import { TimetableController } from './timetable.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TimetableEntity, TimetableSheetEntity, UserEntity } from '../types';
 import { TimetableResolver } from './timetable.resolver';
@@ -13,7 +12,7 @@ import { TimetableResolver } from './timetable.resolver';
             TimetableSheetEntity,
         ]),
     ],
-    controllers: [TimetableController],
+    controllers: [],
     providers: [TimetableService, TimetableResolver],
     exports: [TypeOrmModule, TimetableService],
 })

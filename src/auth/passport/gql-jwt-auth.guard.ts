@@ -5,17 +5,35 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { Reflector } from '@nestjs/core';
+import { IS_PUBLIC_KEY } from '../../decorator/guard.config';
 import { User } from '../../types';
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('gql-jwt') {
+    constructor(private reflector: Reflector) {
+        super();
+    }
+
     getRequest(context: ExecutionContext) {
         const ctx = GqlExecutionContext.create(context);
         return ctx.getContext().req;
     }
 
+    canActivate(context: ExecutionContext) {
+        const isPublic = this.reflector.getAllAndOverride<boolean>(
+            IS_PUBLIC_KEY,
+            [context.getHandler(), context.getClass()],
+        );
+
+        if (isPublic) {
+            return true;
+        }
+
+        return super.canActivate(context);
+    }
+
     handleRequest(err: any, user: User, info: any): any {
-        // You can throw an exception based on either "info" or "err" arguments
         if (err || !user) {
             throw (
                 err ||

@@ -1,8 +1,16 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ClassService } from './class.service';
 import { ClassEntity, CreateClassDto, UpdateClassDto } from '../types';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
+import { Roles } from '../decorator/roles.decorator';
+import { Role } from '../auth/role.enum';
+import { GqlRolesGuard } from '../auth/gqlRoles.guard';
+import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
+import { Public } from '../decorator/guard.config';
 
+@Roles(Role.Admin)
+@UseGuards(GqlRolesGuard)
+@UseGuards(GqlAuthGuard)
 @Resolver(() => ClassEntity)
 export class ClassResolver {
     constructor(private readonly classService: ClassService) {}
@@ -15,6 +23,7 @@ export class ClassResolver {
         return this.classService.findAll(count, index);
     }
 
+    @Public()
     @Query(() => ClassEntity)
     async getClassById(@Args('id', { type: () => Int }) id: number) {
         const classEntity = await this.classService.findOne(id);
@@ -60,6 +69,7 @@ export class ClassResolver {
         }
     }
 
+    @Roles(Role.Teacher)
     @Mutation(() => Boolean)
     async addStudentsToClass(
         @Args('usersId', { type: () => [String] }) usersId: string[],
@@ -73,6 +83,7 @@ export class ClassResolver {
         }
     }
 
+    @Roles(Role.Teacher)
     @Mutation(() => Boolean)
     async removeStudentsFromClass(
         @Args('usersId', { type: () => [String] }) usersId: string[],

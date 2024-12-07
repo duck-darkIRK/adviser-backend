@@ -1,8 +1,15 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MailService } from './mail.service';
 import { CreateMailDto, MailEntity, UpdateMailDto } from '../types';
-import { ParseIntPipe } from '@nestjs/common';
+import { ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Roles } from '../decorator/roles.decorator';
+import { Role } from '../auth/role.enum';
+import { GqlRolesGuard } from '../auth/gqlRoles.guard';
+import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 
+@Roles(Role.Admin)
+@UseGuards(GqlRolesGuard)
+@UseGuards(GqlAuthGuard)
 @Resolver(() => MailEntity)
 export class MailResolver {
     constructor(private readonly mailService: MailService) {}
