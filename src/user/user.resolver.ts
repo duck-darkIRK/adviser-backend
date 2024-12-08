@@ -1,14 +1,14 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto, UserEntity } from '../types';
 import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
-import { SafeUserEntity } from '../types/entities/user.entity';
 import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 import { Roles } from '../decorator/roles.decorator';
 import { Role } from '../auth/role.enum';
 import { GqlRolesGuard } from '../auth/gqlRoles.guard';
-import { GqlCurrentUser } from '../decorator/GqlCurrentUser.decorator';
 import { SearchUserDto } from '../types/search/search-user.dto';
+import { Public } from '../decorator/guard.config';
+import { GqlCurrentUser } from '../decorator/GqlCurrentUser.decorator';
 
 @UseGuards(GqlRolesGuard)
 @UseGuards(GqlAuthGuard)
@@ -16,18 +16,8 @@ import { SearchUserDto } from '../types/search/search-user.dto';
 export class UserResolver {
     constructor(private readonly userService: UserService) {}
 
-    @Query(() => Boolean, { name: 'User_getAllMails' })
-    async userGetMails(
-        @GqlCurrentUser() owner,
-        @Args('count', { type: () => Int, nullable: true }) count?: number,
-        @Args('index', { type: () => Int, nullable: true }) index?: number,
-    ) {
-        console.log(owner);
-        return true;
-    }
-
     @Roles(Role.Teacher, Role.Admin)
-    @Query(() => SafeUserEntity, { name: 'getUserById' })
+    @Query(() => UserEntity, { name: 'getUserById' })
     async findOneUser(
         @Args('id', { type: () => String }, ParseUUIDPipe) id: string,
     ) {
@@ -35,7 +25,7 @@ export class UserResolver {
     }
 
     @Roles(Role.Teacher, Role.Admin)
-    @Query(() => SafeUserEntity, { name: 'getUserByUsername' })
+    @Query(() => UserEntity, { name: 'getUserByUsername' })
     async findOneUserByUsername(
         @Args('username', { type: () => String }) username: string,
     ) {
@@ -43,7 +33,7 @@ export class UserResolver {
     }
 
     @Roles(Role.Teacher, Role.Admin)
-    @Query(() => [SafeUserEntity], { name: 'getAllUsers' })
+    @Query(() => [UserEntity], { name: 'getAllUsers' })
     async getAllUsers(
         @Args('count', { type: () => Number, nullable: true }) count?: number,
         @Args('index', { type: () => Number, nullable: true }) index?: number,
@@ -53,7 +43,8 @@ export class UserResolver {
         return this.userService.findAllUsers(count, index, dto);
     }
 
-    @Mutation(() => SafeUserEntity, { name: 'createUser' })
+    @Public()
+    @Mutation(() => UserEntity, { name: 'createUser' })
     async createUser(
         @Args('createUserDto', { type: () => CreateUserDto })
         createUserDto: CreateUserDto,
@@ -62,7 +53,7 @@ export class UserResolver {
     }
 
     @Roles(Role.Admin)
-    @Mutation(() => SafeUserEntity, { name: 'updateUser' })
+    @Mutation(() => UserEntity, { name: 'updateUser' })
     async updateUser(
         @Args('id', { type: () => String }, ParseUUIDPipe) id: string,
         @Args('updateUserDto', { type: () => UpdateUserDto })
@@ -72,10 +63,16 @@ export class UserResolver {
     }
 
     @Roles(Role.Admin)
-    @Mutation(() => SafeUserEntity, { name: 'deleteUser' })
+    @Mutation(() => UserEntity, { name: 'deleteUser' })
     async deleteUser(
         @Args('id', { type: () => String }, ParseUUIDPipe) id: string,
     ) {
         return await this.userService.deleteUser(id);
+    }
+
+    @Roles(Role.Student, Role.Admin, Role.SuperAdmin, Role.Teacher)
+    @Query(() => UserEntity, { name: 'USER_getOwnData', nullable: true })
+    async getOwnData(@GqlCurrentUser() owner) {
+        return await this.userService.findOneUser(owner.Id);
     }
 }

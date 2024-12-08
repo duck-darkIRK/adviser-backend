@@ -10,6 +10,7 @@ import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 import { GqlRolesGuard } from '../auth/gqlRoles.guard';
 import { Roles } from '../decorator/roles.decorator';
 import { Role } from '../auth/role.enum';
+import { GqlCurrentUser } from '../decorator/GqlCurrentUser.decorator';
 
 @Roles(Role.Admin)
 @UseGuards(GqlRolesGuard)
@@ -46,5 +47,19 @@ export class TranscriptResolver {
         @Args('updateTranscriptDto') updateTranscriptDto: UpdateTranscriptDto,
     ) {
         return await this.transcriptService.update(id, updateTranscriptDto);
+    }
+
+    @Roles(Role.Student)
+    @Query(() => [TranscriptEntity], { name: 'USER_getTranscripts' })
+    async userGetAllTranscript(@GqlCurrentUser() owner) {
+        return await this.transcriptService.userGetOwnTranscript(owner.Id);
+    }
+
+    @Roles(Role.Teacher)
+    @Query(() => [TranscriptEntity], { name: 'USER_getStudentTranscripts' })
+    async userGetStudentTranscript(
+        @Args('userId', { type: () => String }) userId: string,
+    ) {
+        return await this.transcriptService.userGetOwnTranscript(userId);
     }
 }

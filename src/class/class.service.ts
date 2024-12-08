@@ -65,7 +65,7 @@ export class ClassService {
                 );
             }
         }
-        return this.ClassRepository.save(newClass);
+        return await this.ClassRepository.save(newClass);
     }
 
     async findAll(count?: number, index: number = 0) {
@@ -231,5 +231,31 @@ export class ClassService {
             (teacher) => !usersId.includes(teacher.Id),
         );
         return await this.ClassRepository.save(classEntity);
+    }
+
+    async userGetAllClass(userId: string, count?: number, index: number = 0) {
+        return await this.ClassRepository.createQueryBuilder('class')
+            .innerJoinAndSelect('class.students', 'student')
+            .leftJoinAndSelect('class.teachers', 'teacher')
+            .leftJoinAndSelect('class.subject', 'subject')
+            .where('student.Id = :userId', { userId })
+            .take(count)
+            .skip(index)
+            .getMany();
+    }
+
+    async userGetAllTeachClass(
+        userId: string,
+        count?: number,
+        index: number = 0,
+    ) {
+        return await this.ClassRepository.createQueryBuilder('class')
+            .innerJoinAndSelect('class.teachers', 'teachers')
+            .leftJoinAndSelect('class.students', 'students')
+            .leftJoinAndSelect('class.subject', 'subject')
+            .where('teachers.Id = :userId', { userId })
+            .take(count)
+            .skip(index)
+            .getMany();
     }
 }

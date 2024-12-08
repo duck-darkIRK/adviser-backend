@@ -1,11 +1,13 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     CreateDateColumn,
     Entity,
     Generated,
+    JoinColumn,
     JoinTable,
     ManyToMany,
+    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
@@ -18,6 +20,7 @@ import { PostEntity } from './post.entity';
 import { CommentEntity } from './comment.entity';
 import { ClassEntity } from './class.entity';
 import { MailEntity } from './mail.entity';
+import { GroupEntity } from './group.entity';
 
 @ObjectType()
 @Entity()
@@ -71,64 +74,76 @@ export class UserEntity {
     @Column('simple-array', { nullable: true })
     roles: string[];
 
-    @Field(() => [MajorEntity])
+    @Field(() => [MajorEntity], { nullable: true })
     @ManyToMany(() => MajorEntity, (major) => major.users)
     majors: MajorEntity[];
 
-    @Field(() => [TranscriptEntity])
+    @Field(() => [TranscriptEntity], { nullable: true })
     @OneToMany(() => TranscriptEntity, (transcript) => transcript.user)
     transcripts: TranscriptEntity[];
 
-    @Field(() => [MailEntity])
+    @Field(() => [MailEntity], { nullable: true })
     @OneToMany(() => MailEntity, (mail) => mail.sender)
     send: MailEntity[];
 
-    @Field(() => [MailEntity])
+    @Field(() => [MailEntity], { nullable: true })
     @OneToMany(() => MailEntity, (mail) => mail.receiver)
     receive: MailEntity[];
 
-    @Field(() => [TimetableEntity])
+    @Field(() => [TimetableEntity], { nullable: true })
     @OneToMany(() => TimetableEntity, (timetable) => timetable.user)
     timetables: TimetableEntity[];
 
-    @Field(() => [NotificationEntity])
+    @Field(() => [NotificationEntity], { nullable: true })
     @OneToMany(() => NotificationEntity, (notification) => notification.user)
     notifications: NotificationEntity[];
 
-    @Field(() => [PostEntity])
+    @Field(() => [PostEntity], { nullable: true })
     @OneToMany(() => PostEntity, (post) => post.user)
     posts: PostEntity[];
 
-    @Field(() => [PostEntity])
+    @Field(() => [PostEntity], { nullable: true })
     @ManyToMany(() => PostEntity, (post) => post.reader)
     @JoinTable()
     readPosts: PostEntity[];
 
-    @Field(() => [PostEntity])
+    @Field(() => [PostEntity], { nullable: true })
     @ManyToMany(() => PostEntity, (post) => post.likes)
+    @JoinTable()
     likedPosts: PostEntity[];
 
-    @Field(() => [ClassEntity])
+    @Field(() => [ClassEntity], { nullable: true })
     @ManyToMany(() => ClassEntity, (classEntity) => classEntity.students)
     classes: ClassEntity[];
 
-    @Field(() => [ClassEntity])
+    @Field(() => [ClassEntity], { nullable: true })
     @ManyToMany(() => ClassEntity, (classEntity) => classEntity.teachers)
     teach: ClassEntity[];
 
-    @Field(() => [CommentEntity])
+    @Field(() => [CommentEntity], { nullable: true })
     @OneToMany(() => CommentEntity, (comment) => comment.user)
     comments: CommentEntity[];
+
+    @Field(() => GroupEntity, { nullable: true })
+    @ManyToOne(() => GroupEntity, (group) => group.students)
+    @JoinColumn()
+    groups: GroupEntity;
+
+    @Field(() => [GroupEntity], { nullable: true })
+    @ManyToMany(() => GroupEntity, (group) => group.advisers)
+    adviserOf: GroupEntity[];
 
     @Field()
     @Column({ unique: true })
     username: string;
 
-    @Field()
+    @HideField()
+    // @Field()
     @Column()
     password: string;
 
-    @Field({ nullable: true })
+    @HideField()
+    // @Field({ nullable: true })
     @Column({ nullable: true })
     refresh_token: string;
 
@@ -138,83 +153,5 @@ export class UserEntity {
 
     @Field()
     @UpdateDateColumn()
-    updatedAt: Date;
-}
-
-@ObjectType()
-export class SafeUserEntity {
-    @Field()
-    Id: string;
-
-    @Field()
-    code: number;
-
-    @Field({ nullable: true })
-    avatar: string;
-
-    @Field()
-    idPrefix: string;
-
-    @Field()
-    isOnline: boolean;
-
-    @Field()
-    isBaned: boolean;
-
-    @Field()
-    firstName: string;
-
-    @Field()
-    lastName: string;
-
-    @Field({ nullable: true })
-    birthdate: Date;
-
-    @Field({ nullable: true })
-    email: string;
-
-    @Field({ nullable: true })
-    phone: string;
-
-    @Field(() => [String], { nullable: true })
-    roles: string[];
-
-    @Field(() => [MajorEntity])
-    majors: MajorEntity[];
-
-    @Field(() => [TranscriptEntity])
-    transcripts: TranscriptEntity[];
-
-    @Field(() => [TimetableEntity])
-    timetables: TimetableEntity[];
-
-    @Field(() => [NotificationEntity])
-    notifications: NotificationEntity[];
-
-    @Field(() => [PostEntity])
-    posts: PostEntity[];
-
-    @Field(() => [PostEntity])
-    readPosts: PostEntity[];
-
-    @Field(() => [PostEntity])
-    likedPosts: PostEntity[];
-
-    @Field(() => [ClassEntity])
-    classes: ClassEntity[];
-
-    @Field(() => [ClassEntity])
-    teach: ClassEntity[];
-
-    @Field(() => [CommentEntity])
-    comments: CommentEntity[];
-
-    @Field()
-    username: string;
-
-    @Field()
-    createdAt: Date;
-
-    @Field()
     updatedAt: Date;
 }

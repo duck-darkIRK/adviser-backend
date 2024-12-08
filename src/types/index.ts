@@ -9,6 +9,7 @@ import { PostEntity } from './entities/post.entity';
 import { CommentEntity } from './entities/comment.entity';
 import { TimetableEntity } from './entities/timetable.entity';
 import { TimetableSheetEntity } from './entities/timetableSheet.entity';
+import { GroupEntity } from './entities/group.entity';
 
 // DTO imports for each module
 import { CreateClassDto } from './dto/class/create-class.dto';
@@ -33,6 +34,8 @@ import { CreateTranscriptDto } from './dto/transcript/create-transcript.dto';
 import { UpdateTranscriptDto } from './dto/transcript/update-transcript.dto';
 import { CreateUserDto } from './dto/user/create-user.dto';
 import { UpdateUserDto } from './dto/user/update-user.dto';
+import { CreateGroupDto } from './dto/group/create-group.dto';
+import { UpdateGroupDto } from './dto/group/update-group.dto';
 
 // Import the new models
 import { User } from './model/user.model';
@@ -70,6 +73,7 @@ export {
     CommentEntity,
     TimetableEntity,
     TimetableSheetEntity,
+    GroupEntity,
     CreateClassDto,
     UpdateClassDto,
     CreateCommentDto,
@@ -92,4 +96,6 @@ export {
     UpdateTranscriptDto,
     CreateUserDto,
     UpdateUserDto,
+    CreateGroupDto,
+    UpdateGroupDto,
 };

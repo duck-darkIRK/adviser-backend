@@ -7,6 +7,7 @@ import { Role } from '../auth/role.enum';
 import { GqlRolesGuard } from '../auth/gqlRoles.guard';
 import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 import { Public } from '../decorator/guard.config';
+import { GqlCurrentUser } from '../decorator/GqlCurrentUser.decorator';
 
 @Roles(Role.Admin)
 @UseGuards(GqlRolesGuard)
@@ -35,7 +36,7 @@ export class ClassResolver {
 
     @Mutation(() => ClassEntity)
     async createClass(@Args('createClassDto') createClassDto: CreateClassDto) {
-        return this.classService.create(createClassDto);
+        return await this.classService.create(createClassDto);
     }
 
     @Mutation(() => ClassEntity)
@@ -121,5 +122,29 @@ export class ClassResolver {
         } catch (error) {
             throw new NotFoundException(error.message);
         }
+    }
+
+    @Roles(Role.Student)
+    @Query(() => [ClassEntity], { name: 'USER_getAllClasses' })
+    async userGetAllClasses(
+        @GqlCurrentUser() owner,
+        @Args('count', { type: () => Int, nullable: true }) count?: number,
+        @Args('index', { type: () => Int, nullable: true }) index?: number,
+    ) {
+        return await this.classService.userGetAllClass(owner.Id, count, index);
+    }
+
+    @Roles(Role.Teacher)
+    @Query(() => [ClassEntity], { name: 'USER_getAllTeachesClass' })
+    async userGetAllTeachClasses(
+        @GqlCurrentUser() owner,
+        @Args('count', { type: () => Int, nullable: true }) count?: number,
+        @Args('index', { type: () => Int, nullable: true }) index?: number,
+    ) {
+        return await this.classService.userGetAllTeachClass(
+            owner.Id,
+            count,
+            index,
+        );
     }
 }

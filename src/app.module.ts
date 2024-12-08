@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {
     ClassEntity,
     CommentEntity,
+    GroupEntity,
     MailEntity,
     MajorEntity,
     NotificationEntity,
@@ -27,6 +28,7 @@ import { PostModule } from './post/post.module';
 import { SubjectModule } from './subject/subject.module';
 import { TimetableModule } from './timetable/timetable.module';
 import { TranscriptModule } from './transcript/transcript.module';
+import { GroupModule } from './group/group.module';
 
 @Module({
     imports: [
@@ -54,6 +56,7 @@ import { TranscriptModule } from './transcript/transcript.module';
                     NotificationEntity,
                     UserEntity,
                     TimetableSheetEntity,
+                    GroupEntity,
                 ],
                 synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
                 logging: true,
@@ -77,6 +80,7 @@ import { TranscriptModule } from './transcript/transcript.module';
         SubjectModule,
         TimetableModule,
         TranscriptModule,
+        GroupModule,
     ],
     controllers: [],
     providers: [],

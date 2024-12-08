@@ -4,7 +4,6 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn,
-    JoinTable,
     ManyToMany,
     ManyToOne,
     OneToMany,
@@ -40,7 +39,6 @@ export class PostEntity {
 
     @Field(() => [UserEntity])
     @ManyToMany(() => UserEntity, (user) => user.likedPosts)
-    @JoinTable()
     likes: UserEntity[];
 
     @Field(() => UserEntity)

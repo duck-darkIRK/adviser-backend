@@ -14,13 +14,13 @@ import { Repository } from 'typeorm';
 export class MailService {
     constructor(
         @InjectRepository(MailEntity)
-        private readonly mailRepository: Repository<MailEntity>,
+        private readonly MailRepository: Repository<MailEntity>,
         @InjectRepository(UserEntity)
-        private readonly userRepository: Repository<UserEntity>,
+        private readonly UserRepository: Repository<UserEntity>,
         @InjectRepository(PostEntity)
-        private readonly postRepository: Repository<PostEntity>,
+        private readonly PostRepository: Repository<PostEntity>,
         @InjectRepository(CommentEntity)
-        private readonly commentRepository: Repository<CommentEntity>,
+        private readonly CommentRepository: Repository<CommentEntity>,
     ) {}
 
     async create(createMailDto: CreateMailDto) {
@@ -32,9 +32,9 @@ export class MailService {
             replyToPost,
             ...dto
         } = createMailDto;
-        const newMail = this.mailRepository.create(dto);
+        const newMail = this.MailRepository.create(dto);
         if (sender) {
-            const user = await this.userRepository.findOne({
+            const user = await this.UserRepository.findOne({
                 where: { Id: sender },
             });
             if (user) {
@@ -44,7 +44,7 @@ export class MailService {
             }
         }
         if (receiver) {
-            const user = await this.userRepository.findOne({
+            const user = await this.UserRepository.findOne({
                 where: { Id: receiver },
             });
             if (user) {
@@ -56,7 +56,7 @@ export class MailService {
             }
         }
         if (replyToMail) {
-            const mail = await this.mailRepository.findOne({
+            const mail = await this.MailRepository.findOne({
                 where: { Id: replyToMail },
             });
             if (mail) {
@@ -68,7 +68,7 @@ export class MailService {
             }
         }
         if (replyToCmt) {
-            const cmt = await this.commentRepository.findOne({
+            const cmt = await this.CommentRepository.findOne({
                 where: { Id: replyToCmt },
             });
             if (cmt) {
@@ -80,7 +80,7 @@ export class MailService {
             }
         }
         if (replyToPost) {
-            const post = await this.postRepository.findOne({
+            const post = await this.PostRepository.findOne({
                 where: { Id: replyToPost },
             });
             if (post) {
@@ -91,18 +91,18 @@ export class MailService {
                 );
             }
         }
-        return await this.mailRepository.save(newMail);
+        return await this.MailRepository.save(newMail);
     }
 
     async findAll(count?: number, index: number = 0) {
-        return await this.mailRepository.find({
+        return await this.MailRepository.find({
             take: count,
             skip: index,
         });
     }
 
     async findOne(id: number) {
-        return await this.mailRepository.findOne({
+        return await this.MailRepository.findOne({
             where: { Id: id },
             relations: [
                 'sender',
@@ -115,7 +115,35 @@ export class MailService {
     }
 
     async update(id: number, updateMailDto: UpdateMailDto) {
-        await this.mailRepository.update(id, updateMailDto);
-        return this.mailRepository.findOne({ where: { Id: id } });
+        await this.MailRepository.update(id, updateMailDto);
+        return this.MailRepository.findOne({ where: { Id: id } });
+    }
+
+    async userGetOwnSendMail(
+        userId: string,
+        count?: number,
+        index: number = 0,
+    ) {
+        return await this.MailRepository.find({
+            where: { sender: { Id: userId } },
+            relations: ['receiver', 'replyToMail', 'replyToPost', 'replyToCmt'],
+            order: { createdAt: 'DESC' },
+            take: count,
+            skip: index,
+        });
+    }
+
+    async userGetOwnReceiveMail(
+        userId: string,
+        count?: number,
+        index: number = 0,
+    ) {
+        return await this.MailRepository.find({
+            where: { receiver: { Id: userId } },
+            relations: ['sender', 'replyToMail', 'replyToPost', 'replyToCmt'],
+            order: { createdAt: 'DESC' },
+            take: count,
+            skip: index,
+        });
     }
 }

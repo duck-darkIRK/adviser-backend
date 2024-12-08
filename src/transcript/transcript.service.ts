@@ -13,7 +13,7 @@ import { Repository } from 'typeorm';
 export class TranscriptService {
     constructor(
         @InjectRepository(TranscriptEntity)
-        private readonly transcriptRepository: Repository<TranscriptEntity>,
+        private readonly TranscriptRepository: Repository<TranscriptEntity>,
         @InjectRepository(SubjectEntity)
         private readonly SubjectRepository: Repository<SubjectEntity>,
         @InjectRepository(UserEntity)
@@ -22,7 +22,7 @@ export class TranscriptService {
 
     async create(createTranscriptDto: CreateTranscriptDto) {
         const { user, subject, ...dto } = createTranscriptDto;
-        const newTranscript = this.transcriptRepository.create(dto);
+        const newTranscript = this.TranscriptRepository.create(dto);
         if (user) {
             const userEntity = await this.UserRepository.findOne({
                 where: { Id: user },
@@ -45,25 +45,37 @@ export class TranscriptService {
                 );
             }
         }
-        return await this.transcriptRepository.save(newTranscript);
+        return await this.TranscriptRepository.save(newTranscript);
     }
 
     async findAll(count?: number, index: number = 0) {
-        return await this.transcriptRepository.find({
+        return await this.TranscriptRepository.find({
             take: count,
             skip: index,
         });
     }
 
     async findOne(id: number) {
-        return await this.transcriptRepository.findOne({
+        return await this.TranscriptRepository.findOne({
             where: { Id: id },
             relations: ['user', 'subject'],
         });
     }
 
     async update(id: number, updateTranscriptDto: UpdateTranscriptDto) {
-        await this.transcriptRepository.update(id, updateTranscriptDto);
-        return await this.transcriptRepository.findOne({ where: { Id: id } });
+        await this.TranscriptRepository.update(id, updateTranscriptDto);
+        return await this.TranscriptRepository.findOne({ where: { Id: id } });
+    }
+
+    async userGetOwnTranscript(id: string) {
+        const userEntity = await this.UserRepository.findOne({
+            where: { Id: id },
+        });
+        if (!userEntity) {
+            throw new NotFoundException(`User with Id: ${id} not found.`);
+        }
+        return await this.TranscriptRepository.find({
+            where: { user: userEntity },
+        });
     }
 }

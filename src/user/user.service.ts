@@ -58,7 +58,7 @@ export class UserService {
                 'notifications',
                 'posts',
                 'readPosts',
-                // 'likedPosts',
+                'likedPosts',
                 'classes',
                 'teach',
                 'comments',

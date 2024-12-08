@@ -16,5 +16,5 @@ export class CreateTimetableSheetDto {
     @Field()
     @IsNotEmpty()
     @IsString()
-    class: string;
+    classCode: string;
 }

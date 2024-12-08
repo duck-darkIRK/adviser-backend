@@ -12,6 +12,7 @@ import { GqlRolesGuard } from '../auth/gqlRoles.guard';
 import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 import { Roles } from '../decorator/roles.decorator';
 import { Role } from '../auth/role.enum';
+import { GqlCurrentUser } from '../decorator/GqlCurrentUser.decorator';
 
 @Roles(Role.Admin)
 @UseGuards(GqlRolesGuard)
@@ -52,6 +53,15 @@ export class TimetableResolver {
         return await this.timetableService.update(id, updateTimetableDto);
     }
 
+    @Mutation(() => TimetableEntity, { name: 'updateDetailTimetable' })
+    async updateTimetableSheets(
+        @Args('timetableId', { type: () => Int }) id: number,
+        @Args('sheets', { type: () => [CreateTimetableSheetDto] })
+        sheets: CreateTimetableSheetDto[],
+    ) {
+        return this.timetableService.updateSheet(id, sheets);
+    }
+
     @Mutation(() => Boolean)
     async removeTimetable(
         @Args('id', ParseIntPipe) id: number,
@@ -64,4 +74,17 @@ export class TimetableResolver {
     async timetableForm(
         createTimetableSheetDto: CreateTimetableSheetDto,
     ): Promise<void> {}
+
+    @Query(() => [TimetableEntity], { name: 'USER_getAllTimetables' })
+    async userGetAllTimetable(
+        @GqlCurrentUser() owner,
+        @Args('count', { type: () => Int, nullable: true }) count?: number,
+        @Args('index', { type: () => Int, nullable: true }) index?: number,
+    ) {
+        return await this.timetableService.userGetOwnTimetable(
+            owner.Id,
+            count,
+            index,
+        );
+    }
 }
