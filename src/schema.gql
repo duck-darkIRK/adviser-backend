@@ -317,9 +317,9 @@ type Query {
   USER_getAllReceiveMail(count: Int, index: Int): [MailEntity!]!
   USER_getAllSendMail(count: Int, index: Int): [MailEntity!]!
   USER_getAllTeachesClass(count: Int, index: Int): [ClassEntity!]!
-  USER_getAllTimetables(count: Int, index: Int): [TimetableEntity!]!
   USER_getOwnData: UserEntity
   USER_getStudentTranscripts(userId: String!): [TranscriptEntity!]!
+  USER_getTimetables(count: Int, index: Int): [TimetableEntity!]!
   USER_getTranscripts: [TranscriptEntity!]!
   getAllClasses(count: Int, index: Int): [ClassEntity!]!
   getAllComments: [CommentEntity!]!

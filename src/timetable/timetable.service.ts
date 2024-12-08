@@ -57,10 +57,11 @@ export class TimetableService {
                     return newTimetableSheet;
                 });
                 const sheetsEntity = await Promise.all(sheetPromise);
-                sheetsEntity.map(async (sheet) => {
-                    return await this.TimetableSheetRepository.save(sheet);
-                });
-                newTimetable.sheets = sheetsEntity;
+                newTimetable.sheets = await Promise.all(
+                    sheetsEntity.map(async (sheet) => {
+                        return await this.TimetableSheetRepository.save(sheet);
+                    }),
+                );
             } else {
                 throw new Error(`Timetable is duplicate.`);
             }

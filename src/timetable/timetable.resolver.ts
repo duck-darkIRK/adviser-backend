@@ -75,7 +75,7 @@ export class TimetableResolver {
         createTimetableSheetDto: CreateTimetableSheetDto,
     ): Promise<void> {}
 
-    @Query(() => [TimetableEntity], { name: 'USER_getAllTimetables' })
+    @Query(() => [TimetableEntity], { name: 'USER_getTimetables' })
     async userGetAllTimetable(
         @GqlCurrentUser() owner,
         @Args('count', { type: () => Int, nullable: true }) count?: number,
