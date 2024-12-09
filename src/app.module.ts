@@ -30,6 +30,7 @@ import { TimetableModule } from './timetable/timetable.module';
 import { TranscriptModule } from './transcript/transcript.module';
 import { GroupModule } from './group/group.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
     imports: [
@@ -87,6 +88,7 @@ import { CacheModule } from '@nestjs/cache-manager';
         TimetableModule,
         TranscriptModule,
         GroupModule,
+        NotificationModule,
     ],
     controllers: [],
     providers: [],

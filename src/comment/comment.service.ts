@@ -8,6 +8,7 @@ import {
     CommentEntity,
     CreateCommentDto,
     MailEntity,
+    NotificationEntity,
     PostEntity,
     UpdateCommentDto,
     UserEntity,
@@ -25,17 +26,21 @@ export class CommentService {
         private readonly MailRepository: Repository<MailEntity>,
         @InjectRepository(CommentEntity)
         private readonly CommentRepository: Repository<CommentEntity>,
+        @InjectRepository(NotificationEntity)
+        private readonly NotificationRepository: Repository<NotificationEntity>,
     ) {}
 
     async create(createCommentDto: CreateCommentDto) {
         const { user, post, reply, ...dto } = createCommentDto;
         const newComment = this.CommentRepository.create(dto);
+        const noti = this.NotificationRepository.create();
         if (user) {
             const userEntity = await this.UserRepository.findOne({
                 where: { Id: user },
             });
             if (userEntity) {
                 newComment.user = userEntity;
+                noti.user = userEntity;
             } else {
                 throw new NotFoundException(`User with Id: ${user} not found.`);
             }
@@ -62,7 +67,10 @@ export class CommentService {
                 );
             }
         }
-        return await this.CommentRepository.save(newComment);
+        await this.CommentRepository.save(newComment);
+        noti.comment = newComment;
+        await this.CommentRepository.save(noti);
+        return newComment;
     }
 
     async findAll(count?: number, index: number = 0) {

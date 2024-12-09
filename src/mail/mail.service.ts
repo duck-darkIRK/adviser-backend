@@ -4,6 +4,7 @@ import {
     CommentEntity,
     CreateMailDto,
     MailEntity,
+    NotificationEntity,
     PostEntity,
     UpdateMailDto,
     UserEntity,
@@ -21,6 +22,8 @@ export class MailService {
         private readonly PostRepository: Repository<PostEntity>,
         @InjectRepository(CommentEntity)
         private readonly CommentRepository: Repository<CommentEntity>,
+        @InjectRepository(NotificationEntity)
+        private readonly NotificationRepository: Repository<NotificationEntity>,
     ) {}
 
     async create(createMailDto: CreateMailDto) {
@@ -32,6 +35,7 @@ export class MailService {
             replyToPost,
             ...dto
         } = createMailDto;
+        const noti = this.NotificationRepository.create();
         const newMail = this.MailRepository.create(dto);
         if (sender) {
             const user = await this.UserRepository.findOne({
@@ -49,6 +53,7 @@ export class MailService {
             });
             if (user) {
                 newMail.receiver = user;
+                noti.user = user;
             } else {
                 throw new NotFoundException(
                     `User with ID ${receiver} not found`,
@@ -91,7 +96,10 @@ export class MailService {
                 );
             }
         }
-        return await this.MailRepository.save(newMail);
+        await this.MailRepository.save(newMail);
+        noti.mail = newMail;
+        await this.NotificationRepository.save(noti);
+        return newMail;
     }
 
     async findAll(count?: number, index: number = 0) {

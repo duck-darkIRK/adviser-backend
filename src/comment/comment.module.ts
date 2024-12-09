@@ -1,7 +1,13 @@
 import { Module } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CommentEntity, MailEntity, PostEntity, UserEntity } from '../types';
+import {
+    CommentEntity,
+    MailEntity,
+    NotificationEntity,
+    PostEntity,
+    UserEntity,
+} from '../types';
 import { CommentResolver } from './comment.resolver';
 
 @Module({
@@ -12,6 +18,7 @@ import { CommentResolver } from './comment.resolver';
             CommentEntity,
             MailEntity,
             UserEntity,
+            NotificationEntity,
         ]),
     ],
     controllers: [],

@@ -167,6 +167,7 @@ type Mutation {
   USER_commentOnPost(createCommentDto: CreateCommentDto!, postId: Int!): CommentEntity!
   USER_createPost(createPostDto: CreatePostDto!): PostEntity!
   USER_likePost(postId: Int!): Boolean!
+  USER_readNotification: Boolean!
   USER_readPost(postId: Int!): Boolean!
   USER_unlikePost(postId: Int!): Boolean!
   USER_updateComment(commentId: Int!, updateCommentDto: UpdateCommentDto!): CommentEntity!
@@ -249,6 +250,7 @@ type Query {
   USER_getAllReceiveMail(count: Int, index: Int): [MailEntity!]!
   USER_getAllSendMail(count: Int, index: Int): [MailEntity!]!
   USER_getAllTeachesClass(count: Int, index: Int): [ClassEntity!]!
+  USER_getNotifications: [NotificationEntity!]!
   USER_getOwnData: UserEntity
   USER_getStudentTranscripts(userId: String!): [TranscriptEntity!]!
   USER_getTimetables(count: Int, index: Int): [TimetableEntity!]!
