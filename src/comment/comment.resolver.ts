@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CommentService } from './comment.service';
 import { CommentEntity, CreateCommentDto, UpdateCommentDto } from '../types';
 import { ParseIntPipe, UseGuards } from '@nestjs/common';
@@ -28,14 +28,14 @@ export class CommentResolver {
 
     @Query(() => CommentEntity, { name: 'getCommentById' })
     async findOne(
-        @Args('id', ParseIntPipe) id: number,
+        @Args('id', { type: () => Int }, ParseIntPipe) id: number,
     ): Promise<CommentEntity> {
         return this.commentService.findOne(id);
     }
 
     @Mutation(() => CommentEntity)
     async updateComment(
-        @Args('id', ParseIntPipe) id: number,
+        @Args('id', { type: () => Int }, ParseIntPipe) id: number,
         @Args('updateCommentDto') updateCommentDto: UpdateCommentDto,
     ) {
         return this.commentService.update(id, updateCommentDto);

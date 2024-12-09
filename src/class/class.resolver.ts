@@ -34,6 +34,16 @@ export class ClassResolver {
         return classEntity;
     }
 
+    @Public()
+    @Query(() => ClassEntity)
+    async getClassByCode(@Args('code', { type: () => String }) id: string) {
+        const classEntity = await this.classService.findOneByCode(id);
+        if (!classEntity) {
+            throw new NotFoundException(`Class with code ${id} not found`);
+        }
+        return classEntity;
+    }
+
     @Mutation(() => ClassEntity)
     async createClass(@Args('createClassDto') createClassDto: CreateClassDto) {
         return await this.classService.create(createClassDto);
@@ -74,7 +84,7 @@ export class ClassResolver {
     @Mutation(() => Boolean)
     async addStudentsToClass(
         @Args('usersId', { type: () => [String] }) usersId: string[],
-        @Args('classId') classId: number,
+        @Args('classId', { type: () => Int }) classId: number,
     ) {
         try {
             await this.classService.addStudentsToClass(usersId, classId);
@@ -88,7 +98,7 @@ export class ClassResolver {
     @Mutation(() => Boolean)
     async removeStudentsFromClass(
         @Args('usersId', { type: () => [String] }) usersId: string[],
-        @Args('classId') classId: number,
+        @Args('classId', { type: () => Int }) classId: number,
     ) {
         try {
             await this.classService.removeStudentsToClass(usersId, classId);
@@ -101,7 +111,7 @@ export class ClassResolver {
     @Mutation(() => Boolean)
     async addTeachersToClass(
         @Args('usersId', { type: () => [String] }) usersId: string[],
-        @Args('classId') classId: number,
+        @Args('classId', { type: () => Int }) classId: number,
     ) {
         try {
             await this.classService.addTeachersToClass(usersId, classId);
@@ -114,7 +124,7 @@ export class ClassResolver {
     @Mutation(() => Boolean)
     async removeTeachersFromClass(
         @Args('usersId', { type: () => [String] }) usersId: string[],
-        @Args('classId') classId: number,
+        @Args('classId', { type: () => Int }) classId: number,
     ) {
         try {
             await this.classService.removeTeachersToClass(usersId, classId);

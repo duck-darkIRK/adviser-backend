@@ -40,14 +40,14 @@ export class TimetableResolver {
 
     @Query(() => TimetableEntity, { nullable: true })
     async getTimetableById(
-        @Args('id', ParseIntPipe) id: number,
+        @Args('id', { type: () => Int }, ParseIntPipe) id: number,
     ): Promise<TimetableEntity | null> {
         return await this.timetableService.findOne(id);
     }
 
     @Mutation(() => TimetableEntity)
     async updateTimetable(
-        @Args('id', ParseIntPipe) id: number,
+        @Args('id', { type: () => Int }, ParseIntPipe) id: number,
         @Args('updateTimetableDto') updateTimetableDto: UpdateTimetableDto,
     ): Promise<TimetableEntity> {
         return await this.timetableService.update(id, updateTimetableDto);
@@ -64,7 +64,7 @@ export class TimetableResolver {
 
     @Mutation(() => Boolean)
     async removeTimetable(
-        @Args('id', ParseIntPipe) id: number,
+        @Args('id', { type: () => Int }, ParseIntPipe) id: number,
     ): Promise<boolean> {
         await this.timetableService.remove(id);
         return true;

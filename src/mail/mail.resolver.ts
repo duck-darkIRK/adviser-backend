@@ -24,7 +24,7 @@ export class MailResolver {
     }
 
     @Query(() => MailEntity, { nullable: true, name: 'getMailById' })
-    async getMail(@Args('id', ParseIntPipe) id: number) {
+    async getMail(@Args('id', { type: () => Int }, ParseIntPipe) id: number) {
         return this.mailService.findOne(id);
     }
 
@@ -35,7 +35,7 @@ export class MailResolver {
 
     @Mutation(() => MailEntity)
     async updateMail(
-        @Args('id', ParseIntPipe) id: number,
+        @Args('id', { type: () => Int }, ParseIntPipe) id: number,
         @Args('updateMailDto') updateMailDto: UpdateMailDto,
     ) {
         return this.mailService.update(id, updateMailDto);

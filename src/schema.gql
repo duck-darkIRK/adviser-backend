@@ -214,13 +214,13 @@ type MajorEntity {
 
 type Mutation {
   addAdvisersToGroup(groupId: Float!, usersId: [String!]!): Boolean!
-  addCommentToPost(commentId: Float!, postId: Float!): Boolean!
-  addReaderPost(postId: Float!, userId: String!): Boolean!
-  addStudentsToClass(classId: Float!, usersId: [String!]!): Boolean!
-  addStudentsToGroup(groupId: Float!, usersId: [String!]!): Boolean!
+  addCommentToPost(commentId: Int!, postId: Int!): Boolean!
+  addReaderPost(postId: Int!, userId: String!): Boolean!
+  addStudentsToClass(classId: Int!, usersId: [String!]!): Boolean!
+  addStudentsToGroup(groupId: Int!, usersId: [String!]!): Boolean!
   addSubjectsToMajor(majorId: String!, subjectsId: [String!]!): Boolean!
-  addTeachersToClass(classId: Float!, usersId: [String!]!): Boolean!
-  addUserLikePost(postId: Float!, userId: String!): Boolean!
+  addTeachersToClass(classId: Int!, usersId: [String!]!): Boolean!
+  addUserLikePost(postId: Int!, userId: String!): Boolean!
   createClass(createClassDto: CreateClassDto!): ClassEntity!
   createComment(createCommentDto: CreateCommentDto!): CommentEntity!
   createGroup(createGroupDto: CreateGroupDto!): GroupEntity!
@@ -231,30 +231,30 @@ type Mutation {
   createTimetable(createTimetableDto: CreateTimetableDto!): TimetableEntity!
   createTranscript(createTranscriptDto: CreateTranscriptDto!): TranscriptEntity!
   createUser(createUserDto: CreateUserDto!): UserEntity!
-  deleteSubject(id: Float!): Boolean!
+  deleteSubject(id: Int!): Boolean!
   deleteUser(id: String!): UserEntity!
   removeAdvisersFromGroup(groupId: Float!, usersId: [String!]!): Boolean!
   removeClass(id: Int!): Boolean!
   removeGroup(id: Int!): Boolean!
   removeMajor(id: String!): Boolean!
-  removeStudentsFromClass(classId: Float!, usersId: [String!]!): Boolean!
-  removeStudentsFromGroup(groupId: Float!, usersId: [String!]!): Boolean!
+  removeStudentsFromClass(classId: Int!, usersId: [String!]!): Boolean!
+  removeStudentsFromGroup(groupId: Int!, usersId: [String!]!): Boolean!
   removeSubjectsFromMajor(majorId: String!, subjectsId: [String!]!): Boolean!
-  removeTeachersFromClass(classId: Float!, usersId: [String!]!): Boolean!
-  removeTimetable(id: Float!): Boolean!
-  removeUserLikePost(postId: Float!, userId: String!): Boolean!
+  removeTeachersFromClass(classId: Int!, usersId: [String!]!): Boolean!
+  removeTimetable(id: Int!): Boolean!
+  removeUserLikePost(postId: Int!, userId: String!): Boolean!
   timetableForm: TimetableSheetEntity!
   updateClass(id: Int!, updateClassDto: UpdateClassDto!): ClassEntity!
-  updateComment(id: Float!, updateCommentDto: UpdateCommentDto!): CommentEntity!
+  updateComment(id: Int!, updateCommentDto: UpdateCommentDto!): CommentEntity!
   updateDetailTimetable(sheets: [CreateTimetableSheetDto!]!, timetableId: Int!): TimetableEntity!
   updateGroup(id: Int!, updateGroupDto: UpdateGroupDto!): GroupEntity!
-  updateMail(id: Float!, updateMailDto: UpdateMailDto!): MailEntity!
+  updateMail(id: Int!, updateMailDto: UpdateMailDto!): MailEntity!
   updateMajor(id: String!, updateMajorDto: UpdateMajorDto!): MajorEntity!
   updatePost(id: Int!, updatePostDto: UpdatePostDto!): PostEntity!
   updateSubject(id: String!, updateSubjectDto: UpdateSubjectDto!): SubjectEntity!
   updateSubjectInClass(classId: String!, subjectId: String!): Boolean!
-  updateTimetable(id: Float!, updateTimetableDto: UpdateTimetableDto!): TimetableEntity!
-  updateTranscript(id: Float!, updateTranscriptDto: UpdateTranscriptDto!): TranscriptEntity!
+  updateTimetable(id: Int!, updateTimetableDto: UpdateTimetableDto!): TimetableEntity!
+  updateTranscript(id: Int!, updateTranscriptDto: UpdateTranscriptDto!): TranscriptEntity!
   updateUser(id: String!, updateUserDto: UpdateUserDto!): UserEntity!
 }
 
@@ -325,21 +325,22 @@ type Query {
   getAllComments: [CommentEntity!]!
   getAllGroups(count: Int, index: Int): [GroupEntity!]!
   getAllMails(count: Int, index: Int): [MailEntity!]!
-  getAllMajors(count: Float, index: Float): [MajorEntity!]!
+  getAllMajors(count: Int, index: Int): [MajorEntity!]!
   getAllPosts(count: Int, index: Int): [PostEntity!]!
-  getAllSubjects(count: Float, index: Float = 0): [SubjectEntity!]!
+  getAllSubjects(count: Int, index: Int = 0): [SubjectEntity!]!
   getAllTimetables(count: Int, index: Int): [TimetableEntity!]!
-  getAllTranscripts(count: Float, index: Float): [TranscriptEntity!]!
-  getAllUsers(by: SearchUserDto, count: Float, index: Float): [UserEntity!]!
+  getAllTranscripts(count: Int, index: Int): [TranscriptEntity!]!
+  getAllUsers(by: SearchUserDto, count: Int, index: Int): [UserEntity!]!
+  getClassByCode(code: String!): ClassEntity!
   getClassById(id: Int!): ClassEntity!
-  getCommentById(id: Float!): CommentEntity!
+  getCommentById(id: Int!): CommentEntity!
   getGroupById(id: Int!): GroupEntity!
-  getMailById(id: Float!): MailEntity
+  getMailById(id: Int!): MailEntity
   getMajorById(id: String!): MajorEntity
   getPostById(id: Int!): PostEntity!
   getSubjectById(id: String!): SubjectEntity!
-  getTimetableById(id: Float!): TimetableEntity
-  getTranscriptById(id: Float!): TranscriptEntity!
+  getTimetableById(id: Int!): TimetableEntity
+  getTranscriptById(id: Int!): TranscriptEntity!
   getUserById(id: String!): UserEntity!
   getUserByUsername(username: String!): UserEntity!
 }

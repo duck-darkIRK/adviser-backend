@@ -49,8 +49,8 @@ export class PostResolver {
 
     @Mutation(() => Boolean)
     async addUserLikePost(
-        @Args('userId') userId: string,
-        @Args('postId') postId: number,
+        @Args('userId', { type: () => String }) userId: string,
+        @Args('postId', { type: () => Int }) postId: number,
     ) {
         await this.postService.addUserLikePost(userId, postId);
         return true;
@@ -58,8 +58,8 @@ export class PostResolver {
 
     @Mutation(() => Boolean)
     async removeUserLikePost(
-        @Args('userId') userId: string,
-        @Args('postId') postId: number,
+        @Args('userId', { type: () => String }) userId: string,
+        @Args('postId', { type: () => Int }) postId: number,
     ) {
         await this.postService.removeUserLikePost(userId, postId);
         return true;
@@ -67,8 +67,8 @@ export class PostResolver {
 
     @Mutation(() => Boolean)
     async addReaderPost(
-        @Args('userId') userId: string,
-        @Args('postId') postId: number,
+        @Args('userId', { type: () => String }) userId: string,
+        @Args('postId', { type: () => Int }) postId: number,
     ) {
         await this.postService.addReaderPost(userId, postId);
         return true;
@@ -76,8 +76,8 @@ export class PostResolver {
 
     @Mutation(() => Boolean)
     async addCommentToPost(
-        @Args('commentId') commentId: number,
-        @Args('postId') postId: number,
+        @Args('commentId', { type: () => Int }) commentId: number,
+        @Args('postId', { type: () => Int }) postId: number,
     ) {
         await this.postService.addCommentToPost(commentId, postId);
         return true;

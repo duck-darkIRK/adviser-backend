@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import {
     CreateGroupDto,
     GroupEntity,
@@ -118,12 +122,29 @@ export class GroupService {
         if (!groupEntity) {
             throw new NotFoundException(`Group with Id: ${groupId} not found.`);
         }
-        if (new Set(usersId).size != usersId.length) {
-            throw new NotFoundException(`students were duplicate`);
+
+        if (new Set(usersId).size !== usersId.length) {
+            throw new BadRequestException(`Students were duplicate`);
         }
-        groupEntity.students = groupEntity.students.filter(
-            (member) => !usersId.includes(member.Id),
+
+        await Promise.all(
+            usersId.map(async (userId) => {
+                const user = await this.UserRepository.findOne({
+                    where: { Id: userId },
+                });
+                if (!user) {
+                    throw new NotFoundException(
+                        `User with Id: ${userId} not found.`,
+                    );
+                }
+            }),
         );
+
+        await this.GroupRepository.createQueryBuilder()
+            .relation(GroupEntity, 'students')
+            .of(groupEntity)
+            .remove(usersId);
+
         return await this.GroupRepository.save(groupEntity);
     }
 
@@ -165,12 +186,29 @@ export class GroupService {
         if (!groupEntity) {
             throw new NotFoundException(`Group with Id: ${groupId} not found.`);
         }
-        if (new Set(usersId).size != usersId.length) {
-            throw new NotFoundException(`advisers were duplicate`);
+
+        if (new Set(usersId).size !== usersId.length) {
+            throw new BadRequestException(`Advisers were duplicate`);
         }
-        groupEntity.advisers = groupEntity.advisers.filter(
-            (admin) => !usersId.includes(admin.Id),
+
+        await Promise.all(
+            usersId.map(async (userId) => {
+                const user = await this.UserRepository.findOne({
+                    where: { Id: userId },
+                });
+                if (!user) {
+                    throw new NotFoundException(
+                        `User with Id: ${userId} not found.`,
+                    );
+                }
+            }),
         );
+
+        await this.GroupRepository.createQueryBuilder()
+            .relation(GroupEntity, 'advisers')
+            .of(groupEntity)
+            .remove(usersId);
+
         return await this.GroupRepository.save(groupEntity);
     }
 

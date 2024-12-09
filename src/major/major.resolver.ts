@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MajorService } from './major.service';
 import {
     CreateMajorDto,
@@ -32,9 +32,9 @@ export class MajorResolver {
     @Public()
     @Query(() => [MajorEntity])
     async getAllMajors(
-        @Args('index', { type: () => Number, nullable: true })
+        @Args('index', { type: () => Int, nullable: true })
         index?: number,
-        @Args('count', { type: () => Number, nullable: true })
+        @Args('count', { type: () => Int, nullable: true })
         count?: number,
     ) {
         return this.majorService.findAll(count ?? count, index ?? index);

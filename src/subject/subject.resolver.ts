@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SubjectService } from './subject.service';
 import { CreateSubjectDto, SubjectEntity, UpdateSubjectDto } from '../types';
 import { Roles } from '../decorator/roles.decorator';
@@ -18,8 +18,8 @@ export class SubjectResolver {
     @Public()
     @Query(() => [SubjectEntity], { name: 'getAllSubjects' })
     async findAll(
-        @Args('count', { type: () => Number, nullable: true }) count?: number,
-        @Args('index', { type: () => Number, nullable: true, defaultValue: 0 })
+        @Args('count', { type: () => Int, nullable: true }) count?: number,
+        @Args('index', { type: () => Int, nullable: true, defaultValue: 0 })
         index: number = 0,
     ) {
         return await this.subjectService.findAll(count, index);
@@ -46,7 +46,7 @@ export class SubjectResolver {
     }
 
     @Mutation(() => Boolean, { name: 'deleteSubject' })
-    async remove(@Args('id', { type: () => Number }) id: number) {
+    async remove(@Args('id', { type: () => Int }) id: number) {
         const result = await this.subjectService.remove(id);
         return result.affected > 0;
     }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
@@ -103,33 +107,36 @@ export class MajorService {
     }
 
     async removeSubjectsToClass(subjectsId: string[], majorId: string) {
-        const MajorEntity = await this.MajorRepository.findOne({
+        const majorEntity = await this.MajorRepository.findOne({
             where: { Id: majorId },
             relations: { subjects: true },
         });
-        if (!MajorEntity) {
+        if (!majorEntity) {
             throw new NotFoundException(`Major with Id: ${majorId} not found.`);
         }
-        if (new Set(subjectsId).size != subjectsId.length) {
-            throw new NotFoundException(`Subject were duplicate`);
+
+        if (new Set(subjectsId).size !== subjectsId.length) {
+            throw new BadRequestException(`Subjects were duplicate`);
         }
+
         await Promise.all(
             subjectsId.map(async (subjectId) => {
-                const subject = await this.MajorRepository.findOne({
+                const subject = await this.SubjectRepository.findOne({
                     where: { Id: subjectId },
                 });
-                if (subject) {
-                    return subject;
-                } else {
+                if (!subject) {
                     throw new NotFoundException(
-                        `Subject with Id: ${subject} not found.`,
+                        `Subject with Id: ${subjectId} not found.`,
                     );
                 }
             }),
         );
-        MajorEntity.subjects = MajorEntity.subjects.filter(
-            (subject) => !majorId.includes(subject.Id),
-        );
-        return await this.MajorRepository.save(MajorEntity);
+
+        await this.MajorRepository.createQueryBuilder()
+            .relation(MajorEntity, 'subjects')
+            .of(majorEntity)
+            .remove(subjectsId);
+
+        return await this.MajorRepository.save(majorEntity);
     }
 }

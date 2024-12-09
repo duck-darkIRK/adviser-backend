@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import {
     ClassEntity,
     CreateClassDto,
@@ -82,6 +86,13 @@ export class ClassService {
         });
     }
 
+    async findOneByCode(code: string) {
+        return await this.ClassRepository.findOne({
+            where: { classCode: code },
+            relations: ['subjects', 'teachers', 'student'],
+        });
+    }
+
     async update(id: number, updateClassDto: UpdateClassDto) {
         await this.ClassRepository.update(id, updateClassDto);
         return await this.ClassRepository.findOne({ where: { Id: id } });
@@ -151,27 +162,30 @@ export class ClassService {
         if (!classEntity) {
             throw new NotFoundException(`Class with Id: ${classId} not found.`);
         }
-        if (new Set(usersId).size != usersId.length) {
+
+        if (new Set(usersId).size !== usersId.length) {
             throw new NotFoundException(`Students were duplicate`);
         }
+
         await Promise.all(
             usersId.map(async (userId) => {
                 const user = await this.UserRepository.findOne({
                     where: { Id: userId },
                 });
-                if (user) {
-                    return user;
-                } else {
+                if (!user) {
                     throw new NotFoundException(
-                        `User with Id: ${user} not found.`,
+                        `User with Id: ${userId} not found.`,
                     );
                 }
             }),
         );
-        classEntity.students = classEntity.students.filter(
-            (student) => !usersId.includes(student.Id),
-        );
-        return await this.ClassRepository.save(classEntity);
+
+        await this.ClassRepository.createQueryBuilder()
+            .relation(ClassEntity, 'students')
+            .of(classEntity)
+            .remove(usersId);
+
+        return { message: 'Students successfully removed from class.' };
     }
 
     async addTeachersToClass(usersId: string[], classId: number) {
@@ -210,27 +224,30 @@ export class ClassService {
         if (!classEntity) {
             throw new NotFoundException(`Class with Id: ${classId} not found.`);
         }
-        if (new Set(usersId).size != usersId.length) {
-            throw new NotFoundException(`Teachers were duplicate`);
+
+        if (new Set(usersId).size !== usersId.length) {
+            throw new BadRequestException(`Teachers were duplicate`);
         }
+
         await Promise.all(
             usersId.map(async (userId) => {
                 const user = await this.UserRepository.findOne({
                     where: { Id: userId },
                 });
-                if (user) {
-                    return user;
-                } else {
+                if (!user) {
                     throw new NotFoundException(
-                        `User with Id: ${user} not found.`,
+                        `User with Id: ${userId} not found.`,
                     );
                 }
             }),
         );
-        classEntity.teachers = classEntity.teachers.filter(
-            (teacher) => !usersId.includes(teacher.Id),
-        );
-        return await this.ClassRepository.save(classEntity);
+
+        await this.ClassRepository.createQueryBuilder()
+            .relation(ClassEntity, 'teachers')
+            .of(classEntity)
+            .remove(usersId);
+
+        return { message: 'Teachers successfully removed from class.' };
     }
 
     async userGetAllClass(userId: string, count?: number, index: number = 0) {

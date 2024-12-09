@@ -79,18 +79,21 @@ export class PostService {
     async removeUserLikePost(userId: string, postId: number) {
         const post = await this.PostRepository.findOne({
             where: { Id: postId },
+            relations: { likes: true },
         });
         if (!post) {
             throw new NotFoundException(`Post with Id: ${postId} not found.`);
         }
+
         const user = await this.UserRepository.findOne({
             where: { Id: userId },
         });
-        if (user) {
-            post.likes = post.likes.filter((like) => like.Id !== userId);
-        } else {
-            throw new NotFoundException(`User with Id: ${user} not found.`);
+        if (!user) {
+            throw new NotFoundException(`User with Id: ${userId} not found.`);
         }
+
+        post.likes = post.likes.filter((like) => like.Id !== userId);
+
         return await this.PostRepository.save(post);
     }
 

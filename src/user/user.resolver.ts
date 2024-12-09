@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto, UserEntity } from '../types';
 import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
@@ -35,8 +35,8 @@ export class UserResolver {
     @Roles(Role.Teacher, Role.Admin)
     @Query(() => [UserEntity], { name: 'getAllUsers' })
     async getAllUsers(
-        @Args('count', { type: () => Number, nullable: true }) count?: number,
-        @Args('index', { type: () => Number, nullable: true }) index?: number,
+        @Args('count', { type: () => Int, nullable: true }) count?: number,
+        @Args('index', { type: () => Int, nullable: true }) index?: number,
         @Args('by', { type: () => SearchUserDto, nullable: true })
         dto: SearchUserDto = {},
     ): Promise<UserEntity[]> {

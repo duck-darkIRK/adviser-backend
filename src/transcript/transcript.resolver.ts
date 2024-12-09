@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TranscriptService } from './transcript.service';
 import {
     CreateTranscriptDto,
@@ -28,22 +28,24 @@ export class TranscriptResolver {
 
     @Query(() => [TranscriptEntity], { name: 'getAllTranscripts' })
     async findAllTranscripts(
-        @Args('count', { type: () => Number, nullable: true })
+        @Args('count', { type: () => Int, nullable: true })
         count?: number,
-        @Args('index', { type: () => Number, nullable: true })
+        @Args('index', { type: () => Int, nullable: true })
         index?: number,
     ) {
         return await this.transcriptService.findAll(count, index);
     }
 
     @Query(() => TranscriptEntity, { name: 'getTranscriptById' })
-    async findOneTranscript(@Args('id', ParseIntPipe) id: number) {
+    async findOneTranscript(
+        @Args('id', { type: () => Int }, ParseIntPipe) id: number,
+    ) {
         return await this.transcriptService.findOne(id);
     }
 
     @Mutation(() => TranscriptEntity)
     async updateTranscript(
-        @Args('id', ParseIntPipe) id: number,
+        @Args('id', { type: () => Int }, ParseIntPipe) id: number,
         @Args('updateTranscriptDto') updateTranscriptDto: UpdateTranscriptDto,
     ) {
         return await this.transcriptService.update(id, updateTranscriptDto);

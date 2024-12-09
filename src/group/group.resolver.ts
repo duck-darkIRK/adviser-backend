@@ -61,7 +61,7 @@ export class GroupResolver {
     @Mutation(() => Boolean)
     async addStudentsToGroup(
         @Args('usersId', { type: () => [String] }) usersId: string[],
-        @Args('groupId') groupId: number,
+        @Args('groupId', { type: () => Int }) groupId: number,
     ) {
         try {
             await this.groupService.addStudentsToGroup(usersId, groupId);
@@ -75,7 +75,7 @@ export class GroupResolver {
     @Mutation(() => Boolean)
     async removeStudentsFromGroup(
         @Args('usersId', { type: () => [String] }) usersId: string[],
-        @Args('groupId') groupId: number,
+        @Args('groupId', { type: () => Int }) groupId: number,
     ) {
         try {
             await this.groupService.removeStudentsFromGroup(usersId, groupId);
