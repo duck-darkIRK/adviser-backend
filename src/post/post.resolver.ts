@@ -1,14 +1,12 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PostService } from './post.service';
 import { CreatePostDto, PostEntity, UpdatePostDto } from '../types';
-import { Roles } from '../decorator/roles.decorator';
-import { Role } from '../auth/role.enum';
 import { UseGuards } from '@nestjs/common';
 import { GqlRolesGuard } from '../auth/gqlRoles.guard';
 import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 import { Public } from '../decorator/guard.config';
+import { GqlCurrentUser } from '../decorator/GqlCurrentUser.decorator';
 
-@Roles(Role.Admin)
 @UseGuards(GqlRolesGuard)
 @UseGuards(GqlAuthGuard)
 @Resolver(() => PostEntity)
@@ -80,6 +78,55 @@ export class PostResolver {
         @Args('postId', { type: () => Int }) postId: number,
     ) {
         await this.postService.addCommentToPost(commentId, postId);
+        return true;
+    }
+
+    @Mutation(() => PostEntity, { name: 'USER_createPost' })
+    async userCreatePost(
+        @GqlCurrentUser() owner,
+        @Args('createPostDto') createPostDto: CreatePostDto,
+    ): Promise<PostEntity> {
+        createPostDto.user = owner.Id;
+        return await this.postService.create(createPostDto);
+    }
+
+    @Mutation(() => PostEntity, { name: 'USER_updatePost' })
+    async userUpdatePost(
+        @GqlCurrentUser() owner,
+        @Args('postId', { type: () => Int }) postId: number,
+        @Args('updatePostDto') updatePostDto: UpdatePostDto,
+    ): Promise<PostEntity> {
+        return await this.postService.userUpdate(
+            owner.Id,
+            postId,
+            updatePostDto,
+        );
+    }
+
+    @Mutation(() => Boolean, { name: 'USER_likePost' })
+    async userLikePost(
+        @GqlCurrentUser() owner,
+        @Args('postId', { type: () => Int }) postId: number,
+    ) {
+        await this.postService.userLikePost(owner.Id, postId);
+        return true;
+    }
+
+    @Mutation(() => Boolean, { name: 'USER_unlikePost' })
+    async UserUnlikePost(
+        @GqlCurrentUser() owner,
+        @Args('postId', { type: () => Int }) postId: number,
+    ) {
+        await this.postService.userUnlikePost(owner.Id, postId);
+        return true;
+    }
+
+    @Mutation(() => Boolean, { name: 'USER_readPost' })
+    async userReadPost(
+        @GqlCurrentUser() owner,
+        @Args('postId', { type: () => Int }) postId: number,
+    ) {
+        await this.postService.addReaderPost(owner.Id, postId);
         return true;
     }
 }

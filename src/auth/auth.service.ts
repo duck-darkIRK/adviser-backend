@@ -2,7 +2,7 @@ import { Dependencies, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User } from '../types';
+import { UserEntity } from '../types';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class AuthService {
         private readonly configService: ConfigService,
     ) {}
 
-    async login(user: User) {
+    async login(user: UserEntity) {
         const payload = {
             username: user.username,
             sub: user.Id,

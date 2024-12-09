@@ -2,19 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Class {
-  Id: ID!
-  classCode: String!
-  createdAt: DateTime!
-  isDeleted: Boolean!
-  size: Int!
-  status: String
-  students: [User!]
-  subject: Subject!
-  teachers: [User!]
-  updatedAt: DateTime!
-}
-
 type ClassEntity {
   Id: Int!
   classCode: String!
@@ -26,19 +13,6 @@ type ClassEntity {
   subject: SubjectEntity!
   teachers: [UserEntity!]!
   updatedAt: DateTime!
-}
-
-type Comment {
-  Id: ID!
-  content: String!
-  createdAt: DateTime!
-  likes: [User!]
-  post: Post
-  replies: [Comment!]
-  reply: Comment
-  replyMail: [Mail!]
-  updatedAt: DateTime!
-  user: User!
 }
 
 type CommentEntity {
@@ -164,20 +138,6 @@ type GroupEntity {
   updatedAt: DateTime!
 }
 
-type Mail {
-  Id: ID!
-  content: String!
-  createdAt: DateTime!
-  name: String!
-  receiver: User!
-  replyToCmt: Comment
-  replyToMail: Mail
-  replyToPost: Post
-  sender: User!
-  type: String!
-  updatedAt: DateTime!
-}
-
 type MailEntity {
   Id: Int!
   content: String!
@@ -192,16 +152,6 @@ type MailEntity {
   updatedAt: DateTime!
 }
 
-type Major {
-  Id: ID!
-  createdAt: DateTime!
-  isDeleted: Boolean!
-  majorName: String!
-  subjects: [Subject!]!
-  updatedAt: DateTime!
-  users: [User!]!
-}
-
 type MajorEntity {
   Id: String!
   createdAt: DateTime!
@@ -213,6 +163,14 @@ type MajorEntity {
 }
 
 type Mutation {
+  USER_commentOnComment(commentId: Int!, createCommentDto: CreateCommentDto!): CommentEntity!
+  USER_commentOnPost(createCommentDto: CreateCommentDto!, postId: Int!): CommentEntity!
+  USER_createPost(createPostDto: CreatePostDto!): PostEntity!
+  USER_likePost(postId: Int!): Boolean!
+  USER_readPost(postId: Int!): Boolean!
+  USER_unlikePost(postId: Int!): Boolean!
+  USER_updateComment(commentId: Int!, updateCommentDto: UpdateCommentDto!): CommentEntity!
+  USER_updatePost(postId: Int!, updatePostDto: UpdatePostDto!): PostEntity!
   addAdvisersToGroup(groupId: Float!, usersId: [String!]!): Boolean!
   addCommentToPost(commentId: Int!, postId: Int!): Boolean!
   addReaderPost(postId: Int!, userId: String!): Boolean!
@@ -258,18 +216,6 @@ type Mutation {
   updateUser(id: String!, updateUserDto: UpdateUserDto!): UserEntity!
 }
 
-type Notification {
-  Id: ID!
-  comment: Comment
-  createdAt: DateTime!
-  isDeleted: Boolean!
-  isPin: Boolean!
-  isRead: Boolean!
-  mail: Mail
-  updatedAt: DateTime!
-  user: User!
-}
-
 type NotificationEntity {
   Id: Int!
   comment: CommentEntity
@@ -280,20 +226,6 @@ type NotificationEntity {
   mail: MailEntity
   updatedAt: DateTime!
   user: UserEntity!
-}
-
-type Post {
-  Id: ID!
-  comments: [Comment!]!
-  content: String
-  createdAt: DateTime!
-  image: [String]!
-  likes: [User!]!
-  reader: [User!]!
-  reply: [Mail!]!
-  title: String
-  updatedAt: DateTime!
-  user: User!
 }
 
 type PostEntity {
@@ -321,6 +253,7 @@ type Query {
   USER_getStudentTranscripts(userId: String!): [TranscriptEntity!]!
   USER_getTimetables(count: Int, index: Int): [TimetableEntity!]!
   USER_getTranscripts: [TranscriptEntity!]!
+  USER_sendMail(createMailDto: CreateMailDto!): [MailEntity!]!
   getAllClasses(count: Int, index: Int): [ClassEntity!]!
   getAllComments: [CommentEntity!]!
   getAllGroups(count: Int, index: Int): [GroupEntity!]!
@@ -342,7 +275,7 @@ type Query {
   getTimetableById(id: Int!): TimetableEntity
   getTranscriptById(id: Int!): TranscriptEntity!
   getUserById(id: String!): UserEntity!
-  getUserByUsername(username: String!): UserEntity!
+  getUserByUsername(username: String!): [UserEntity!]!
 }
 
 input SearchUserDto {
@@ -353,17 +286,6 @@ input SearchUserDto {
   lastName: String
   relations: [String!]
   roles: [String!]
-}
-
-type Subject {
-  Id: ID!
-  classes: [Class!]!
-  createdAt: DateTime!
-  inTranscript: [Transcript!]
-  isDeleted: Boolean!
-  majors: [Major!]!
-  subjectName: String!
-  updatedAt: DateTime!
 }
 
 type SubjectEntity {
@@ -377,17 +299,6 @@ type SubjectEntity {
   updatedAt: DateTime!
 }
 
-type Timetable {
-  Id: ID!
-  createdAt: DateTime!
-  isDeleted: Boolean!
-  semester: Float!
-  sheets: [TimetableSheet!]!
-  updatedAt: DateTime!
-  user: User!
-  year: Float!
-}
-
 type TimetableEntity {
   Id: Float!
   createdAt: DateTime!
@@ -399,29 +310,12 @@ type TimetableEntity {
   year: Int!
 }
 
-type TimetableSheet {
-  Id: ID!
-  class: String
-  day: Float!
-  time: Float!
-  timetable: Timetable!
-}
-
 type TimetableSheetEntity {
   Id: Float!
   class: String
   day: Int!
   time: Int!
   timetable: TimetableEntity!
-}
-
-type Transcript {
-  Id: ID!
-  createdAt: DateTime!
-  score: Float!
-  subject: Subject!
-  updatedAt: DateTime!
-  user: User!
 }
 
 type TranscriptEntity {
@@ -492,36 +386,6 @@ input UpdateUserDto {
   refresh_token: String
   roles: [String!]
   username: String
-}
-
-type User {
-  Id: ID!
-  avatar: String
-  birthdate: DateTime
-  classes: [Class!]
-  code: Float!
-  comments: [Comment!]
-  createdAt: DateTime!
-  email: String
-  firstName: String!
-  idPrefix: String!
-  isBaned: Boolean!
-  isOnline: Boolean!
-  lastName: String!
-  likedPosts: [Post!]
-  majors: [Major!]
-  notifications: [Notification!]
-  password: String!
-  phone: String
-  posts: [Post!]
-  readPosts: [Post!]
-  refresh_token: String
-  roles: [String!]
-  teach: [Class!]
-  timetables: [Timetable!]
-  transcripts: [Transcript!]
-  updatedAt: DateTime!
-  username: String!
 }
 
 type UserEntity {

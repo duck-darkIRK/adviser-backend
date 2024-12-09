@@ -8,13 +8,13 @@ import { GqlRolesGuard } from '../auth/gqlRoles.guard';
 import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 import { GqlCurrentUser } from '../decorator/GqlCurrentUser.decorator';
 
-@Roles(Role.Admin)
 @UseGuards(GqlRolesGuard)
 @UseGuards(GqlAuthGuard)
 @Resolver(() => MailEntity)
 export class MailResolver {
     constructor(private readonly mailService: MailService) {}
 
+    @Roles(Role.Admin)
     @Query(() => [MailEntity])
     async getAllMails(
         @Args('count', { type: () => Int, nullable: true }) count?: number,
@@ -23,6 +23,7 @@ export class MailResolver {
         return this.mailService.findAll(count, index);
     }
 
+    @Roles(Role.Admin)
     @Query(() => MailEntity, { nullable: true, name: 'getMailById' })
     async getMail(@Args('id', { type: () => Int }, ParseIntPipe) id: number) {
         return this.mailService.findOne(id);
@@ -41,7 +42,7 @@ export class MailResolver {
         return this.mailService.update(id, updateMailDto);
     }
 
-    @Roles(Role.Student, Role.Teacher)
+    @Roles(Role.Student, Role.Teacher, Role.Admin)
     @Query(() => [MailEntity], { name: 'USER_getAllReceiveMail' })
     async userGetOwnSendMail(
         @GqlCurrentUser() owner,
@@ -55,7 +56,7 @@ export class MailResolver {
         );
     }
 
-    @Roles(Role.Student, Role.Teacher)
+    @Roles(Role.Student, Role.Teacher, Role.Admin)
     @Query(() => [MailEntity], { name: 'USER_getAllSendMail' })
     async userGetOwnReceiveMail(
         @GqlCurrentUser() owner,
@@ -67,5 +68,15 @@ export class MailResolver {
             count,
             index,
         );
+    }
+
+    @Roles(Role.Student, Role.Teacher, Role.Admin)
+    @Query(() => [MailEntity], { name: 'USER_sendMail' })
+    async userSendMail(
+        @GqlCurrentUser() owner,
+        @Args('createMailDto') createMailDto: CreateMailDto,
+    ) {
+        createMailDto.sender = owner.Id;
+        return await this.mailService.create(createMailDto);
     }
 }

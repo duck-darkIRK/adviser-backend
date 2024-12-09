@@ -1,5 +1,5 @@
 import {
-    BadRequestException,
+    ForbiddenException,
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
@@ -226,7 +226,7 @@ export class ClassService {
         }
 
         if (new Set(usersId).size !== usersId.length) {
-            throw new BadRequestException(`Teachers were duplicate`);
+            throw new ForbiddenException(`Teachers were duplicate`);
         }
 
         await Promise.all(

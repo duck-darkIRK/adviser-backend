@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
     CommentEntity,
@@ -85,5 +89,26 @@ export class CommentService {
     async update(id: number, updateCommentDto: UpdateCommentDto) {
         await this.CommentRepository.update(id, updateCommentDto);
         return await this.CommentRepository.findOne({ where: { Id: id } });
+    }
+
+    async updateOwnComment(
+        userId: string,
+        commentId: number,
+        updateCommentDto: UpdateCommentDto,
+    ) {
+        const commentEntity = await this.CommentRepository.findOne({
+            where: { Id: commentId },
+            relations: { user: true },
+        });
+        const userEntity = await this.UserRepository.findOne({
+            where: { Id: userId },
+        });
+        if (commentEntity.user == userEntity) {
+            return await this.update(commentId, updateCommentDto);
+        } else {
+            throw new ForbiddenException(
+                `This is not your Comment with Id: ${commentId}`,
+            );
+        }
     }
 }

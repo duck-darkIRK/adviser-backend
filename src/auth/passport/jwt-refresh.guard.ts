@@ -4,7 +4,7 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../../types';
+import { UserEntity } from '../../types';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../../decorator/guard.config';
 
@@ -27,7 +27,7 @@ export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
 
     handleRequest(
         err: any,
-        user: User,
+        user: UserEntity,
         info: any,
         context: ExecutionContext,
     ): any {

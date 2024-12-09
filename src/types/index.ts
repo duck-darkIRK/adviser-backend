@@ -37,31 +37,7 @@ import { UpdateUserDto } from './dto/user/update-user.dto';
 import { CreateGroupDto } from './dto/group/create-group.dto';
 import { UpdateGroupDto } from './dto/group/update-group.dto';
 
-// Import the new models
-import { User } from './model/user.model';
-import { Mail } from './model/mail.model';
-import { Notification } from './model/notification.model';
-import { Post } from './model/post.model';
-import { Comment } from './model/comment.model';
-import { Timetable } from './model/timetable.model';
-import { TimetableSheet } from './model/timetableSheet.model';
-import { Transcript } from './model/transcript.model';
-import { Subject } from './model/subject.model';
-import { Class } from './model/class.model';
-import { Major } from './model/major.model';
-
 export {
-    User,
-    Major,
-    Transcript,
-    Class,
-    Subject,
-    Notification,
-    Mail,
-    Post,
-    Comment,
-    Timetable,
-    TimetableSheet,
     UserEntity,
     MajorEntity,
     TranscriptEntity,

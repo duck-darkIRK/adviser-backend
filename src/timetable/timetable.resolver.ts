@@ -13,6 +13,7 @@ import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
 import { Roles } from '../decorator/roles.decorator';
 import { Role } from '../auth/role.enum';
 import { GqlCurrentUser } from '../decorator/GqlCurrentUser.decorator';
+import { Public } from '../decorator/guard.config';
 
 @Roles(Role.Admin)
 @UseGuards(GqlRolesGuard)
@@ -70,11 +71,13 @@ export class TimetableResolver {
         return true;
     }
 
+    @Public()
     @Mutation(() => TimetableSheetEntity)
     async timetableForm(
         createTimetableSheetDto: CreateTimetableSheetDto,
     ): Promise<void> {}
 
+    @Roles(Role.Student)
     @Query(() => [TimetableEntity], { name: 'USER_getTimetables' })
     async userGetAllTimetable(
         @GqlCurrentUser() owner,

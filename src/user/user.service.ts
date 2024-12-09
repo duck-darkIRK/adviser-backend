@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import {
     CreateUserDto,
     MajorEntity,
@@ -62,6 +62,7 @@ export class UserService {
                 'classes',
                 'teach',
                 'comments',
+                'timetables.sheets',
             ],
         });
     }
@@ -152,5 +153,11 @@ export class UserService {
         await this.UserRepository.update(id, updateUser);
 
         return refreshToken;
+    }
+
+    async searchUsersByUsername(username: string) {
+        return await this.UserRepository.find({
+            where: { username: Like(`%${username}%`) },
+        });
     }
 }

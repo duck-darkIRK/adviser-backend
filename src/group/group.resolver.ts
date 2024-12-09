@@ -57,7 +57,6 @@ export class GroupResolver {
         return result.affected > 0;
     }
 
-    @Roles(Role.Teacher)
     @Mutation(() => Boolean)
     async addStudentsToGroup(
         @Args('usersId', { type: () => [String] }) usersId: string[],
@@ -71,7 +70,6 @@ export class GroupResolver {
         }
     }
 
-    @Roles(Role.Teacher)
     @Mutation(() => Boolean)
     async removeStudentsFromGroup(
         @Args('usersId', { type: () => [String] }) usersId: string[],

@@ -29,9 +29,15 @@ import { SubjectModule } from './subject/subject.module';
 import { TimetableModule } from './timetable/timetable.module';
 import { TranscriptModule } from './transcript/transcript.module';
 import { GroupModule } from './group/group.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
     imports: [
+        CacheModule.register({
+            isGlobal: true,
+            ttl: 5,
+            max: 100,
+        }),
         ConfigModule.forRoot({ isGlobal: true }), // Thêm ConfigModule
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],

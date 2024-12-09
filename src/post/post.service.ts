@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
     CommentEntity,
@@ -58,6 +62,21 @@ export class PostService {
         return await this.PostRepository.findOne({ where: { Id: id } });
     }
 
+    async userUpdate(userId: string, id: number, updatePostDto: UpdatePostDto) {
+        const user = await this.UserRepository.findOne({
+            where: { Id: userId },
+        });
+        const post = await this.PostRepository.findOne({
+            where: { Id: id },
+            relations: { user: true },
+        });
+        if (user != post.user) {
+            throw new ForbiddenException(`This post is not yours`);
+        }
+        await this.PostRepository.update(id, updatePostDto);
+        return await this.PostRepository.save(post);
+    }
+
     async addUserLikePost(userId: string, postId: number) {
         const post = await this.PostRepository.findOne({
             where: { Id: postId },
@@ -76,6 +95,34 @@ export class PostService {
         return await this.PostRepository.save(post);
     }
 
+    async userLikePost(userId: string, postId: number) {
+        const user = await this.UserRepository.findOne({
+            where: { Id: userId },
+        });
+        const post = await this.PostRepository.findOne({
+            where: { Id: postId },
+            relations: { user: true },
+        });
+        if (user != post.user) {
+            throw new ForbiddenException(`This post is not yours`);
+        }
+        return await this.addUserLikePost(userId, postId);
+    }
+
+    async userUnlikePost(userId: string, postId: number) {
+        const user = await this.UserRepository.findOne({
+            where: { Id: userId },
+        });
+        const post = await this.PostRepository.findOne({
+            where: { Id: postId },
+            relations: { user: true },
+        });
+        if (user != post.user) {
+            throw new ForbiddenException(`This post is not yours`);
+        }
+        return await this.removeUserLikePost(userId, postId);
+    }
+
     async removeUserLikePost(userId: string, postId: number) {
         const post = await this.PostRepository.findOne({
             where: { Id: postId },
@@ -92,9 +139,12 @@ export class PostService {
             throw new NotFoundException(`User with Id: ${userId} not found.`);
         }
 
-        post.likes = post.likes.filter((like) => like.Id !== userId);
+        await this.PostRepository.createQueryBuilder()
+            .relation('likes')
+            .of(post)
+            .remove(user);
 
-        return await this.PostRepository.save(post);
+        return post;
     }
 
     async addReaderPost(userId: string, postId: number) {

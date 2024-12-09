@@ -7,7 +7,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../../decorator/guard.config';
-import { User } from '../../types';
+import { UserEntity } from '../../types';
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('gql-jwt') {
@@ -33,7 +33,7 @@ export class GqlAuthGuard extends AuthGuard('gql-jwt') {
         return super.canActivate(context);
     }
 
-    handleRequest(err: any, user: User, info: any): any {
+    handleRequest(err: any, user: UserEntity, info: any): any {
         if (err || !user) {
             throw (
                 err ||

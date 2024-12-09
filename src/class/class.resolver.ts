@@ -6,7 +6,6 @@ import { Roles } from '../decorator/roles.decorator';
 import { Role } from '../auth/role.enum';
 import { GqlRolesGuard } from '../auth/gqlRoles.guard';
 import { GqlAuthGuard } from '../auth/passport/gql-jwt-auth.guard';
-import { Public } from '../decorator/guard.config';
 import { GqlCurrentUser } from '../decorator/GqlCurrentUser.decorator';
 
 @Roles(Role.Admin)
@@ -24,7 +23,7 @@ export class ClassResolver {
         return this.classService.findAll(count, index);
     }
 
-    @Public()
+    @Roles(Role.Teacher)
     @Query(() => ClassEntity)
     async getClassById(@Args('id', { type: () => Int }) id: number) {
         const classEntity = await this.classService.findOne(id);
@@ -34,7 +33,7 @@ export class ClassResolver {
         return classEntity;
     }
 
-    @Public()
+    @Roles(Role.Teacher)
     @Query(() => ClassEntity)
     async getClassByCode(@Args('code', { type: () => String }) id: string) {
         const classEntity = await this.classService.findOneByCode(id);

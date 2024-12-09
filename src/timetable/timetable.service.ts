@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
     ClassEntity,
@@ -37,9 +41,15 @@ export class TimetableService {
                 throw new NotFoundException(`User with Id: ${user} not found.`);
             }
         }
-        const timeList = sheets.map((sheet) => sheet.time);
+        const timeList: [number, number][] = sheets.map((sheet) => [
+            sheet.time,
+            sheet.day,
+        ]);
         if (timeList.length > 0) {
-            if (new Set(timeList).size == timeList.length) {
+            const uniqueTimeList = new Set(
+                timeList.map((time) => JSON.stringify(time)),
+            );
+            if (uniqueTimeList.size == timeList.length) {
                 const sheetPromise = sheets.map(async (sheet) => {
                     const { classCode, ...dto } = sheet;
                     const newTimetableSheet =
@@ -89,6 +99,16 @@ export class TimetableService {
     }
 
     async updateSheet(id: number, sheets: CreateTimetableSheetDto[]) {
+        const timeList: [number, number][] = sheets.map((sheet) => [
+            sheet.time,
+            sheet.day,
+        ]);
+        const uniqueTimeList = new Set(
+            timeList.map((time) => JSON.stringify(time)),
+        );
+        if (uniqueTimeList.size !== timeList.length) {
+            throw new ForbiddenException(`TimetableSheets were duplicate.`);
+        }
         const timetable = await this.TimetableRepository.findOne({
             where: { Id: id },
             relations: ['sheets'],

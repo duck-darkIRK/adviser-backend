@@ -4,7 +4,7 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../../types';
+import { UserEntity } from '../../types';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../../decorator/guard.config';
 
@@ -25,7 +25,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         return super.canActivate(context);
     }
 
-    handleRequest(err: any, user: User, info: any): any {
+    handleRequest(err: any, user: UserEntity, info: any): any {
         // You can throw an exception based on either "info" or "err" arguments
         if (err || !user) {
             throw (

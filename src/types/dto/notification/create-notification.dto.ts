@@ -1,7 +1,5 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Comment, Mail, User } from '../../index';
 
 @InputType()
 export class CreateNotificationDto {
@@ -17,18 +15,15 @@ export class CreateNotificationDto {
     @IsOptional()
     isRead?: boolean;
 
-    @Field(() => Comment, { nullable: true })
+    @Field(() => Int, { nullable: true })
     @IsOptional()
-    @Type(() => Comment)
-    comment?: Comment;
+    comment?: number;
 
-    @Field(() => Mail, { nullable: true })
+    @Field(() => Int, { nullable: true })
     @IsOptional()
-    @Type(() => Mail)
-    mail?: Mail;
+    mail?: number;
 
-    @Field(() => User)
+    @Field(() => String)
     @IsNotEmpty()
-    @Type(() => User)
-    user: User;
+    user: string;
 }
