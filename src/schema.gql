@@ -276,8 +276,10 @@ type Query {
   getSubjectById(id: String!): SubjectEntity!
   getTimetableById(id: Int!): TimetableEntity
   getTranscriptById(id: Int!): TranscriptEntity!
+  getUserByCode(code: Int!): UserEntity!
   getUserById(id: String!): UserEntity!
-  getUserByUsername(username: String!): [UserEntity!]!
+  getUserByUsername(username: String!): UserEntity!
+  searchUserByUsername(username: String!): [UserEntity!]!
 }
 
 input SearchUserDto {

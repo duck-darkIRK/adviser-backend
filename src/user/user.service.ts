@@ -70,6 +70,63 @@ export class UserService {
     async findOneUserByUsername(username: string) {
         return await this.UserRepository.findOne({
             where: { username: username },
+            relations: [
+                'majors',
+                'transcripts',
+                'send',
+                'receive',
+                'timetables',
+                'notifications',
+                'posts',
+                'readPosts',
+                'likedPosts',
+                'classes',
+                'teach',
+                'comments',
+                'timetables.sheets',
+            ],
+        });
+    }
+
+    async findUserByUsername(username: string) {
+        return await this.UserRepository.find({
+            where: { username: Like(`%${username}%`) },
+            relations: [
+                'majors',
+                'transcripts',
+                'send',
+                'receive',
+                'timetables',
+                'notifications',
+                'posts',
+                'readPosts',
+                'likedPosts',
+                'classes',
+                'teach',
+                'comments',
+                'timetables.sheets',
+            ],
+        });
+    }
+
+    async findOneUserByCode(code: number) {
+        return await this.UserRepository.findOne({
+            where: { code: code },
+            relations: [
+                'majors',
+                'transcripts',
+                'send',
+                'receive',
+                'timetables',
+                'notifications',
+                'posts',
+                'readPosts',
+                'likedPosts',
+                'classes',
+                'teach',
+                'comments',
+                'timetables.sheets',
+            ],
         });
     }
 

@@ -33,11 +33,17 @@ export class UserResolver {
     }
 
     @Roles(Role.Teacher, Role.Admin)
-    @Query(() => [UserEntity], { name: 'getUserByUsername' })
+    @Query(() => [UserEntity], { name: 'searchUserByUsername' })
     async searchUserByUsername(
         @Args('username', { type: () => String }) username: string,
     ) {
-        return await this.userService.searchUsersByUsername(username);
+        return await this.userService.findUserByUsername(username);
+    }
+
+    @Roles(Role.Teacher, Role.Admin)
+    @Query(() => UserEntity, { name: 'getUserByCode' })
+    async searchUserByCode(@Args('code', { type: () => Int }) code: number) {
+        return await this.userService.findOneUserByCode(code);
     }
 
     @Roles(Role.Teacher, Role.Admin)
