@@ -255,7 +255,7 @@ type Query {
   USER_getStudentTranscripts(userId: String!): [TranscriptEntity!]!
   USER_getTimetables(count: Int, index: Int): [TimetableEntity!]!
   USER_getTranscripts: [TranscriptEntity!]!
-  USER_sendMail(createMailDto: CreateMailDto!): [MailEntity!]!
+  USER_sendMail(createMailDto: CreateMailDto!): MailEntity!
   getAllClasses(count: Int, index: Int): [ClassEntity!]!
   getAllComments: [CommentEntity!]!
   getAllGroups(count: Int, index: Int): [GroupEntity!]!

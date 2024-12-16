@@ -49,7 +49,7 @@ export class MailResolver {
         @Args('count', { type: () => Int, nullable: true }) count?: number,
         @Args('index', { type: () => Int, nullable: true }) index?: number,
     ) {
-        return await this.mailService.userGetOwnSendMail(
+        return await this.mailService.userGetOwnReceiveMail(
             owner.Id,
             count,
             index,
@@ -63,7 +63,7 @@ export class MailResolver {
         @Args('count', { type: () => Int, nullable: true }) count?: number,
         @Args('index', { type: () => Int, nullable: true }) index?: number,
     ) {
-        return await this.mailService.userGetOwnReceiveMail(
+        return await this.mailService.userGetOwnSendMail(
             owner.Id,
             count,
             index,
@@ -71,7 +71,7 @@ export class MailResolver {
     }
 
     @Roles(Role.Student, Role.Teacher, Role.Admin)
-    @Query(() => [MailEntity], { name: 'USER_sendMail' })
+    @Query(() => MailEntity, { name: 'USER_sendMail' })
     async userSendMail(
         @GqlCurrentUser() owner,
         @Args('createMailDto') createMailDto: CreateMailDto,
