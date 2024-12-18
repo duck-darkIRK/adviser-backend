@@ -43,10 +43,15 @@ export class PostService {
         return await this.PostRepository.save(newPost);
     }
 
-    async findAll(count?: number, index: number = 0) {
+    async findAll(
+        count?: number,
+        index: number = 0,
+        order: 'DESC' | 'ASC' = 'DESC',
+    ) {
         return await this.PostRepository.find({
             take: count,
             skip: index,
+            order: { createdAt: order },
         });
     }
 

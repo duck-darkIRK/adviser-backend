@@ -25,8 +25,10 @@ export class PostResolver {
     async getPosts(
         @Args('count', { type: () => Int, nullable: true }) count?: number,
         @Args('index', { type: () => Int, nullable: true }) index?: number,
+        @Args('order', { type: () => String, nullable: true })
+        order?: 'DESC' | 'ASC',
     ): Promise<PostEntity[]> {
-        return this.postService.findAll(count, index);
+        return this.postService.findAll(count, index, order);
     }
 
     @Public()
